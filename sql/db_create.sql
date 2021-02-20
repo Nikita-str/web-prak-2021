@@ -1,17 +1,19 @@
 
 /*
+DROP TABLE IF EXISTS author_book;
+DROP TABLE IF EXISTS book_ex_history;
+
+DROP TABLE IF EXISTS book_examples;
+
+DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS publishers;
 DROP TABLE IF EXISTS authors;
-DROP TABLE IF EXISTS books;
-DROP TABLE IF EXISTS author_book;
-DROP TABLE IF EXISTS book_examples;
 DROP TABLE IF EXISTS readers;
-DROP TABLE IF EXISTS book_ex_history;
 */
 
 CREATE TABLE publishers (
 	p_id SERIAL PRIMARY KEY,
-	p_name TEXT
+	p_name TEXT 
 );
 
 
@@ -19,7 +21,9 @@ CREATE TABLE authors (
 	author_id SERIAL PRIMARY KEY,
 	second_name VARCHAR(40) NOT NULL,
 	first_name VARCHAR(40) NOT NULL,
-	patronymic VARCHAR(40)
+	patronymic VARCHAR(40),
+	CONSTRAINT len_of_name_more_than_zero CHECK (0 < LENGTH(first_name) AND 0 < LENGTH(second_name)),
+	CONSTRAINT len_of_patr_more_than_zero CHECK ((patronymic is NULL) OR (0 < LENGTH(patronymic)))
 );
 
 
@@ -32,7 +36,8 @@ CREATE TABLE books (
 	total_amount INTEGER  DEFAULT(0) NOT NULL,
 	spare_amount INTEGER  DEFAULT(0) NOT NULL,
 	decommissioned BOOL DEFAULT(FALSE),
-	CONSTRAINT spare_LOE_total CHECK(spare_amount <= total_amount) --Less Or Equeal = LOE 
+	CONSTRAINT spare_LOE_total CHECK(spare_amount <= total_amount), --Less Or Equeal = LOE 
+	CONSTRAINT amount_MOE_zero CHECK((total_amount >= 0) AND (spare_amount >= 0)) -- More Or Equal = MOE 
 );
 
 CREATE TABLE author_book (
@@ -54,7 +59,9 @@ CREATE TABLE readers (
 	first_name VARCHAR(40) NOT NULL,
 	patronymic VARCHAR(40),
 	address TEXT,
-	phone_number VARCHAR(30)
+	phone_number VARCHAR(30),
+	CONSTRAINT len_of_name_more_than_zero CHECK (0 < LENGTH(first_name) AND 0 < LENGTH(second_name)),
+	CONSTRAINT len_of_patr_more_than_zero CHECK ((patronymic is NULL) OR (0 < LENGTH(patronymic)))
 );
 
 CREATE TABLE book_ex_history (
