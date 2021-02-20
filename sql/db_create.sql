@@ -1,5 +1,6 @@
 
 /*
+PROTECT : ERROR 
 DROP TABLE IF EXISTS author_book;
 DROP TABLE IF EXISTS book_ex_history;
 
@@ -60,6 +61,7 @@ CREATE TABLE readers (
 	patronymic VARCHAR(40),
 	address TEXT,
 	phone_number VARCHAR(30),
+	lib_card_passed BOOL DEFAULT(FALSE),
 	CONSTRAINT len_of_name_more_than_zero CHECK (0 < LENGTH(first_name) AND 0 < LENGTH(second_name)),
 	CONSTRAINT len_of_patr_more_than_zero CHECK ((patronymic is NULL) OR (0 < LENGTH(patronymic)))
 );
