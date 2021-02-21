@@ -77,6 +77,3 @@ CREATE TABLE book_ex_history (
 	CONSTRAINT issue_LOE_real_ret_date CHECK((real_ret_date is NULL) OR (date_of_issue <= real_ret_date))
 );
 
-
-
-
