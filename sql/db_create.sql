@@ -31,6 +31,7 @@ CREATE TABLE authors (
 CREATE TABLE books (
 	book_id SERIAL PRIMARY KEY,
 	title TEXT NOT NULL,
+	about TEXT,
 	publisher_id INTEGER REFERENCES publishers(p_id),--can be null 
 	pub_year DATE, -- can be null if we don't know when it was published
 	ISBN VARCHAR(25), --can be null, old book or small circulation
