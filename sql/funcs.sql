@@ -105,6 +105,27 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE PROCEDURE add_author_to_book(author_id INT, book_id INT)
+AS $$ BEGIN
+INSERT INTO author_book(author_id, book_id) VALUES (author_id, book_id);
+END; $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_author_id(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), OUT ret_author_id INTEGER)
+AS $$ BEGIN
+	f_name = LOWER(f_name);
+	s_name = LOWER(s_name);
+	patr = LOWER(patr);
+	ret_author_id = NULL;
+	SELECT author_id FROM authors WHERE 
+		first_name = f_name AND second_name = s_name AND patronymic = patr INTO ret_author_id;
+		
+	IF (ret_author_id IS NULL) THEN
+		SELECT * FROM add_author(f_name, s_name, patr) INTO ret_author_id;
+	END IF;
+END; $$ LANGUAGE plpgsql;
+
 --- END : AUTHORS -------------------------------------------------------------------------------------------------
 
 
@@ -143,5 +164,17 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION add_book(title TEXT, about TEXT, pub_year INT, ISBN VARCHAR(25), amount INT, OUT ret_book_id INTEGER)
+AS $$
+BEGIN
+	WITH bk AS (
+		INSERT INTO books(title, about, pub_year, ISBN, total_amount, spare_amount) VALUES 
+		(LOWER(title), about, TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
+	)
+	SELECT * FROM bk INTO ret_book_id;
+END;
+$$
+LANGUAGE plpgsql;
 --- END : BOOKS -------------------------------------------------------------------------------------------------
 
