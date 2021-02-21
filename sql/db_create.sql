@@ -7,14 +7,14 @@ DROP TABLE IF EXISTS book_ex_history;
 DROP TABLE IF EXISTS book_examples;
 
 DROP TABLE IF EXISTS books;
-DROP TABLE IF EXISTS publishers;
-DROP TABLE IF EXISTS authors;
+DROP TABLE IF EXISTS authors CASCADE;
+DROP TABLE IF EXISTS publishers CASCADE;
 DROP TABLE IF EXISTS readers;
 */
 
 CREATE TABLE publishers (
 	p_id SERIAL PRIMARY KEY,
-	p_name TEXT 
+	p_name TEXT UNIQUE
 );
 
 

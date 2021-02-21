@@ -23,7 +23,15 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
+CREATE OR REPLACE FUNCTION get_publisher_id(publ_name TEXT, OUT ret_p_id INTEGER)
+AS $$ BEGIN
+	ret_p_id = NULL;
+	SELECT p_id FROM publishers WHERE p_name = publ_name INTO ret_p_id;
+	IF (ret_p_id IS NULL) THEN
+		WITH publ AS (INSERT INTO publishers(p_name) VALUES (publ_name) RETURNING p_id)
+		SELECT * FROM publ INTO ret_p_id;
+	END IF;
+END; $$ LANGUAGE plpgsql;
 --SELECT * FROM find_publisher('fi', false);
 
 
@@ -84,14 +92,56 @@ BEGIN
 	LOOP RETURN NEXT r; END LOOP;
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE add_author(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40))
+CREATE OR REPLACE FUNCTION add_author(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), OUT ret_author_id INTEGER)
 AS $$
 BEGIN
-	INSERT INTO authors(second_name, first_name, patronymic) VALUES (LOWER(s_name), LOWER(f_name), LOWER(patr));
+	WITH auth AS
+	(
+	INSERT INTO authors(second_name, first_name, patronymic) VALUES (LOWER(s_name), LOWER(f_name), LOWER(patr))
+	RETURNING author_id
+	)
+	SELECT * FROM auth INTO ret_author_id;
 END;
 $$
 LANGUAGE plpgsql;
 
 --- END : AUTHORS -------------------------------------------------------------------------------------------------
 
+
+--- START : BOOKS -------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION add_book(title TEXT, OUT ret_book_id INTEGER)
+AS $$
+BEGIN
+	WITH bk AS (INSERT INTO books(title) VALUES (LOWER(title)) RETURNING book_id)
+	SELECT * FROM bk INTO ret_book_id;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION add_book(title TEXT, about TEXT, publ_id INT, pub_year INT, ISBN VARCHAR(25), amount INT, OUT ret_book_id INTEGER)
+AS $$
+BEGIN
+	WITH bk AS (
+		INSERT INTO books(title, about, publisher_id, pub_year, ISBN, total_amount, spare_amount) VALUES 
+		(LOWER(title), about, publ_id, TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
+	)
+	SELECT * FROM bk INTO ret_book_id;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION add_book(title TEXT, about TEXT, publ_name TEXT, pub_year INT, ISBN VARCHAR(25), amount INT, OUT ret_book_id INTEGER)
+AS $$
+BEGIN
+	WITH bk AS (
+		INSERT INTO books(title, about, publisher_id, pub_year, ISBN, total_amount, spare_amount) VALUES 
+		(LOWER(title), about, get_publisher_id(publ_name), TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
+	)
+	SELECT * FROM bk INTO ret_book_id;
+END;
+$$
+LANGUAGE plpgsql;
+
+--- END : BOOKS -------------------------------------------------------------------------------------------------
 
