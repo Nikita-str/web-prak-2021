@@ -129,6 +129,15 @@ END; $$ LANGUAGE plpgsql;
 --- END : AUTHORS -------------------------------------------------------------------------------------------------
 
 
+--- BOOK EXAMPLE
+CREATE OR REPLACE PROCEDURE add_book_ex(bk_id INT, amount INT)
+AS $$ BEGIN
+	WHILE (amount > 0) LOOP
+		INSERT INTO book_examples(book_id) VALUES (bk_id);
+		amount = amount - 1;
+	END LOOP;	
+END; $$ LANGUAGE plpgsql;
+
 --- START : BOOKS -------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION add_book(title TEXT, OUT ret_book_id INTEGER)
@@ -148,21 +157,16 @@ BEGIN
 		(LOWER(title), about, publ_id, TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
 	)
 	SELECT * FROM bk INTO ret_book_id;
+	
+	CALL add_book_ex(ret_book_id, amount);	
 END;
 $$
 LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION add_book(title TEXT, about TEXT, publ_name TEXT, pub_year INT, ISBN VARCHAR(25), amount INT, OUT ret_book_id INTEGER)
-AS $$
-BEGIN
-	WITH bk AS (
-		INSERT INTO books(title, about, publisher_id, pub_year, ISBN, total_amount, spare_amount) VALUES 
-		(LOWER(title), about, get_publisher_id(publ_name), TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
-	)
-	SELECT * FROM bk INTO ret_book_id;
-END;
-$$
-LANGUAGE plpgsql;
+AS $$ BEGIN
+	SELECT * FROM add_book(title, about, get_publisher_id(publ_name), pub_year, ISBN, amount) INTO ret_book_id;
+END; $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION add_book(title TEXT, about TEXT, pub_year INT, ISBN VARCHAR(25), amount INT, OUT ret_book_id INTEGER)
@@ -173,8 +177,122 @@ BEGIN
 		(LOWER(title), about, TO_DATE(pub_year::text, 'YYYY'), ISBN, amount, amount) RETURNING book_id
 	)
 	SELECT * FROM bk INTO ret_book_id;
+	
+	CALL add_book_ex(ret_book_id, amount);
 END;
 $$
 LANGUAGE plpgsql;
 --- END : BOOKS -------------------------------------------------------------------------------------------------
 
+
+CREATE OR REPLACE FUNCTION add_reader(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), 
+									  address TEXT, phone_number VARCHAR(30), OUT ret_reader_id INTEGER)
+AS $$ BEGIN
+	WITH reader AS
+	(
+	INSERT INTO readers(second_name, first_name, patronymic, address, phone_number) 
+	VALUES (LOWER(s_name), LOWER(f_name), LOWER(patr), LOWER(address), phone_number)
+	RETURNING library_card_id
+	)
+	SELECT * FROM reader INTO ret_reader_id;
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION the_same_book(ex_id_1 INT, ex_id_2 INT)
+RETURNS BOOL
+AS $$ BEGIN
+	RETURN  (SELECT book_id FROM book_examples WHERE book_ex_id = ex_id_1) 
+			=
+			(SELECT book_id FROM book_examples WHERE book_ex_id = ex_id_2);
+END; $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE book_take(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
+AS $$ 
+DECLARE 
+	var_x INT;
+BEGIN
+	IF ((SELECT spare FROM book_examples be WHERE be.book_ex_id = bk_ex_id) = FALSE) THEN
+		RAISE EXCEPTION 'книга уже выдана [book ex. id = %]', bk_ex_id;
+	END IF;
+	IF ((SELECT decommissioned FROM book_examples be WHERE be.book_ex_id = bk_ex_id) = TRUE) THEN
+		RAISE EXCEPTION 'книга снята с учета [book ex. id = %]', bk_ex_id;
+	END IF;
+	var_x = lib_card_id;
+	IF((SELECT COUNT(*) FROM book_ex_history beh 
+	    WHERE (real_ret_date IS NULL) AND (beh.lib_card_id = var_x) AND the_same_book(book_ex_id, bk_ex_id)) <> 0) THEN
+		RAISE EXCEPTION 'у данного читателя уже есть экземпляр данной книги [book id = %]', bk_ex_id;
+	END IF;
+
+	INSERT INTO book_ex_history(book_ex_id, lib_card_id, date_of_issue, shedule_ret_date, real_ret_date) 
+	VALUES (bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date, NULL);
+
+	UPDATE book_examples be SET spare = FALSE WHERE be.book_ex_id = bk_ex_id;
+	UPDATE books SET spare_amount = spare_amount - 1 
+		WHERE books.book_id = (SELECT book_id FROM book_examples be WHERE be.book_ex_id = bk_ex_id);		
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE book_take(book_ex_id INT, lib_card_id INT, day_for_ret INT)
+AS $$ BEGIN
+	CALL book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE book_ret(bk_ex_id INT)
+AS $$ BEGIN
+	IF ((SELECT spare FROM book_examples be WHERE be.book_ex_id = bk_ex_id) = TRUE) THEN 
+		RAISE EXCEPTION 'book not taked [book ex. id = %]', bk_ex_id;
+	END IF;
+
+	UPDATE book_ex_history beh SET real_ret_date = CAST(NOW() AS DATE) 
+	WHERE (real_ret_date IS NULL) AND (beh.book_ex_id = bk_ex_id); 
+
+	UPDATE book_examples be SET spare = TRUE WHERE be.book_ex_id = bk_ex_id;
+	
+	UPDATE books SET spare_amount = spare_amount + 1 
+		WHERE books.book_id = (SELECT book_id FROM book_examples be WHERE be.book_ex_id = bk_ex_id);
+END; $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_ex_book_history(bk_ex_id INT)
+RETURNS SETOF book_ex_history 
+AS $$ DECLARE
+	r book_ex_history%rowtype;
+BEGIN
+	FOR r IN (SELECT * FROM book_ex_history WHERE book_ex_id = bk_ex_id ORDER BY date_of_issue) LOOP 
+		RETURN NEXT r;
+	END LOOP;
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_reader_history(_lib_card_id INT)
+RETURNS SETOF book_ex_history 
+AS $$ DECLARE
+	r book_ex_history%rowtype;
+BEGIN
+	FOR r IN (SELECT * FROM book_ex_history WHERE lib_card_id = _lib_card_id ORDER BY date_of_issue) LOOP 
+		RETURN NEXT r;
+	END LOOP;
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_reader_cur_book(_lib_card_id INT)
+RETURNS SETOF book_ex_history 
+AS $$ DECLARE
+	r book_ex_history%rowtype;
+BEGIN
+	FOR r IN (SELECT * FROM get_reader_history(_lib_card_id) WHERE (real_ret_date IS NULL) ORDER BY shedule_ret_date) LOOP 
+		RETURN NEXT r;
+	END LOOP;
+END; $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_reader_overdue_book(_lib_card_id INT, only_cur BOOL)
+RETURNS SETOF book_ex_history 
+AS $$ DECLARE
+	r book_ex_history%rowtype;
+BEGIN
+	FOR r IN (SELECT * FROM book_ex_history WHERE 
+			  lib_card_id = _lib_card_id AND 
+			  (((real_ret_date IS NULL) AND shedule_ret_date < CAST(NOW() AS DATE)) 
+			   OR shedule_ret_date < real_ret_date) AND ((NOT only_cur) OR real_ret_date IS NULL)
+	 		  ORDER BY date_of_issue) 
+	 LOOP 
+		RETURN NEXT r;
+	END LOOP;
+END; $$ LANGUAGE plpgsql;
