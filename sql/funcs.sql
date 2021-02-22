@@ -111,6 +111,14 @@ AS $$ BEGIN
 INSERT INTO author_book(author_id, book_id) VALUES (author_id, book_id);
 END; $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_authors_of_book(_book_id INT)
+RETURNS SETOF authors 
+AS $$ DECLARE
+	r authors%rowtype;
+BEGIN
+	FOR r IN SELECT * FROM authors WHERE author_id IN (SELECT author_id FROM author_book WHERE book_id = _book_id) 
+	LOOP RETURN NEXT r; END LOOP;
+END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_author_id(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), OUT ret_author_id INTEGER)
 AS $$ BEGIN
