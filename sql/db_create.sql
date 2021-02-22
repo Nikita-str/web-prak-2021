@@ -2,7 +2,7 @@
 /*
 PROTECT : ERROR 
 DROP TABLE IF EXISTS author_book;
-DROP TABLE IF EXISTS book_ex_history;
+DROP TABLE IF EXISTS book_ex_history CASCADE;
 
 DROP TABLE IF EXISTS book_examples;
 
@@ -35,11 +35,7 @@ CREATE TABLE books (
 	publisher_id INTEGER REFERENCES publishers(p_id),--can be null 
 	pub_year DATE, -- can be null if we don't know when it was published
 	ISBN VARCHAR(25), --can be null, old book or small circulation
-	total_amount INTEGER  DEFAULT(0) NOT NULL,
-	spare_amount INTEGER  DEFAULT(0) NOT NULL,
-	decommissioned BOOL DEFAULT(FALSE),
-	CONSTRAINT spare_LOE_total CHECK(spare_amount <= total_amount), --Less Or Equeal = LOE 
-	CONSTRAINT amount_MOE_zero CHECK((total_amount >= 0) AND (spare_amount >= 0)) -- More Or Equal = MOE 
+	decommissioned BOOL DEFAULT(FALSE)
 );
 
 CREATE TABLE author_book (
