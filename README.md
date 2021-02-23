@@ -8,4 +8,6 @@
 
 ### Схема пользовательского интерфейса:
 ![alt text](https://github.com/Nikita-str/web-prak-2021/blob/main/doc/navigation_scheme.png)
-Перечень и описание страниц см. в ../doc/page_description.txt
+
+[перечень и описание страниц](/doc/page_description.txt)  
+[описание сценариев использования](/doc/use_case.txt)
