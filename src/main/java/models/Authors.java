@@ -3,7 +3,7 @@ package models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "public.authors")
+@Table(name = "authors")
 public class Authors {
 
   @Id
@@ -53,4 +53,9 @@ public class Authors {
     this.patronymic = patronymic;
   }
 
+  @Override
+  public String toString(){
+    return "Author {Id: " + authorId + " | name: " + firstName +
+            " | second name: " + secondName + " | patronymic :" + patronymic + "}";
+  }
 }

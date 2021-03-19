@@ -4,8 +4,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "public.book_ex_history")
+@Table(name = "book_ex_history")
 public class BookExHistory {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long phantomId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_ex_id")
@@ -22,8 +25,8 @@ public class BookExHistory {
   @Column(name = "real_ret_date")
   private Date realRetDate;
 
-  BookExHistory(){}
-  BookExHistory(BookExamples bookExamples, Readers readers, Date dateOfIssue, Date sheduleRetDate, Date realRetDate)
+  public BookExHistory(){}
+  public BookExHistory(BookExamples bookExamples, Readers readers, Date dateOfIssue, Date sheduleRetDate, Date realRetDate)
   {
     this.bookEx = bookExamples;
     this.reader = readers;

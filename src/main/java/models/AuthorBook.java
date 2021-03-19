@@ -3,8 +3,11 @@ package models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "public.author_book")
+@Table(name = "author_book")
 public class AuthorBook {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long phantomId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id")
