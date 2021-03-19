@@ -27,6 +27,8 @@ public class StdDAO_Authors implements I_AuthorsDAO {
         return GetAuthorById(GetAuthorId(f_name, s_name, patr));
     }
 
+    //public Tuple<Long, Long> GetIntINt(){ return (1, 2);}
+
     @Override
     public Long GetAuthorId(String f_name, String s_name, String patr) throws SQLException {
         Long aut_id = null;
@@ -44,7 +46,7 @@ public class StdDAO_Authors implements I_AuthorsDAO {
                 .setParameter("patr", patr);
 
         query.execute();
-        aut_id = Long.valueOf((Integer)query.getOutputParameterValue("ret_author_id"));
+        aut_id = Long.valueOf((Integer) query.getOutputParameterValue("ret_author_id"));
 
         ses.getTransaction().commit();
         ses.close();
