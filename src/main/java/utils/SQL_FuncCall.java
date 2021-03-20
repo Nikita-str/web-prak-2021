@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SQL_FuncCall {
 
-    public List FindPublisher(Session session, String publ_name, Boolean complete_match) {
+    public static List FindPublisher(Session session, String publ_name, Boolean complete_match) {
         ProcedureCall query = session.createStoredProcedureCall("find_publisher");
         query.registerParameter("publ_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("complete_match", Boolean.class, ParameterMode.IN).enablePassingNulls(true);
@@ -19,7 +19,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer GetPublisherId(Session session, String publ_name) {
+    public static Integer GetPublisherId(Session session, String publ_name) {
         ProcedureCall query = session.createStoredProcedureCall("get_publisher_id");
         query.registerParameter("publ_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("ret_p_id", Integer.class, ParameterMode.OUT);
@@ -29,7 +29,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List FindAuthor(Session session, String f_name, String s_name, String patr, Boolean complete_match) {
+    public static List FindAuthor(Session session, String f_name, String s_name, String patr, Boolean complete_match) {
         ProcedureCall query = session.createStoredProcedureCall("find_author");
         query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -44,7 +44,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List FindAuthor(Session session, String s0, String s1, Boolean complete_match) {
+    public static List FindAuthor(Session session, String s0, String s1, Boolean complete_match) {
         ProcedureCall query = session.createStoredProcedureCall("find_author");
         query.registerParameter("s0", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s1", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -57,7 +57,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List FindAuthor(Session session, String surname, Boolean complete_match) {
+    public static List FindAuthor(Session session, String surname, Boolean complete_match) {
         ProcedureCall query = session.createStoredProcedureCall("find_author");
         query.registerParameter("surname", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("complete_match", Boolean.class, ParameterMode.IN).enablePassingNulls(true);
@@ -68,7 +68,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer AddAuthor(Session session, String f_name, String s_name, String patr) {
+    public static Integer AddAuthor(Session session, String f_name, String s_name, String patr) {
         ProcedureCall query = session.createStoredProcedureCall("add_author");
         query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -82,7 +82,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void AddAuthorToBook(Session session, Integer author_id, Integer book_id) {
+    public static void AddAuthorToBook(Session session, Integer author_id, Integer book_id) {
         ProcedureCall query = session.createStoredProcedureCall("add_author_to_book");
         query.registerParameter("author_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("book_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -93,7 +93,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List GetAuthorsOfBook(Session session, Integer _book_id) {
+    public static List GetAuthorsOfBook(Session session, Integer _book_id) {
         ProcedureCall query = session.createStoredProcedureCall("get_authors_of_book");
         query.registerParameter("_book_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("_book_id", _book_id);
@@ -102,7 +102,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer GetAuthorId(Session session, String f_name, String s_name, String patr) {
+    public static Integer GetAuthorId(Session session, String f_name, String s_name, String patr) {
         ProcedureCall query = session.createStoredProcedureCall("get_author_id");
         query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -116,7 +116,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void AddBookEx(Session session, Integer bk_id, Integer amount) {
+    public static void AddBookEx(Session session, Integer bk_id, Integer amount) {
         ProcedureCall query = session.createStoredProcedureCall("add_book_ex");
         query.registerParameter("bk_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("amount", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -127,7 +127,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer AddBook(Session session, String title) {
+    public static Integer AddBook(Session session, String title) {
         ProcedureCall query = session.createStoredProcedureCall("add_book");
         query.registerParameter("title", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("ret_book_id", Integer.class, ParameterMode.OUT);
@@ -137,7 +137,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer AddBook(Session session, String title, String about, Integer publ_id, Integer pub_year, String ISBN, Integer amount) {
+    public static Integer AddBook(Session session, String title, String about, Integer publ_id, Integer pub_year, String ISBN, Integer amount) {
         ProcedureCall query = session.createStoredProcedureCall("add_book");
         query.registerParameter("title", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("about", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -157,7 +157,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer AddBook(Session session, String title, String about, String publ_name, Integer pub_year, String ISBN, Integer amount) {
+    public static Integer AddBook(Session session, String title, String about, String publ_name, Integer pub_year, String ISBN, Integer amount) {
         ProcedureCall query = session.createStoredProcedureCall("add_book");
         query.registerParameter("title", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("about", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -177,7 +177,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Integer AddBook(Session session, String title, String about, Integer pub_year, String ISBN, Integer amount) {
+    public static Integer AddBook(Session session, String title, String about, Integer pub_year, String ISBN, Integer amount) {
         ProcedureCall query = session.createStoredProcedureCall("add_book");
         query.registerParameter("title", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("about", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -195,7 +195,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void AddReader(Session session, String f_name, String s_name, String patr) {
+    public static void AddReader(Session session, String f_name, String s_name, String patr) {
         ProcedureCall query = session.createStoredProcedureCall("add_reader");
         query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
@@ -208,7 +208,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Boolean TheSameBook(Session session, Integer ex_id_1, Integer ex_id_2) {
+    public static Boolean TheSameBook(Session session, Integer ex_id_1, Integer ex_id_2) {
         ProcedureCall query = session.createStoredProcedureCall("the_same_book");
         query.registerParameter("ex_id_1", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("ex_id_2", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -219,7 +219,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Boolean BookAlreadyTaked(Session session, Integer bk_ex_id) {
+    public static Boolean BookAlreadyTaked(Session session, Integer bk_ex_id) {
         ProcedureCall query = session.createStoredProcedureCall("book_already_taked");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("bk_ex_id", bk_ex_id);
@@ -228,7 +228,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Boolean BookIsDereg(Session session, Integer bk_ex_id) {
+    public static Boolean BookIsDereg(Session session, Integer bk_ex_id) {
         ProcedureCall query = session.createStoredProcedureCall("book_is_dereg");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("bk_ex_id", bk_ex_id);
@@ -237,7 +237,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Boolean ReaderHasBookEx(Session session, Integer bk_ex_id, Integer _lib_card_id) {
+    public static Boolean ReaderHasBookEx(Session session, Integer bk_ex_id, Integer _lib_card_id) {
         ProcedureCall query = session.createStoredProcedureCall("reader_has_book_ex");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("_lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -248,7 +248,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookTake(Session session, Integer bk_ex_id, Integer lib_card_id, Date date_issue, Date schedule_ret_date) {
+    public static void BookTake(Session session, Integer bk_ex_id, Integer lib_card_id, Date date_issue, Date schedule_ret_date) {
         ProcedureCall query = session.createStoredProcedureCall("book_take");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -263,7 +263,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookTake(Session session, Integer bk_ex_id, Integer lib_card_id, Date schedule_ret_date) {
+    public static void BookTake(Session session, Integer bk_ex_id, Integer lib_card_id, Date schedule_ret_date) {
         ProcedureCall query = session.createStoredProcedureCall("book_take");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -276,7 +276,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookTake(Session session, Integer book_ex_id, Integer lib_card_id, Integer day_for_ret) {
+    public static void BookTake(Session session, Integer book_ex_id, Integer lib_card_id, Integer day_for_ret) {
         ProcedureCall query = session.createStoredProcedureCall("book_take");
         query.registerParameter("book_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
@@ -289,7 +289,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookRet(Session session, Integer bk_ex_id) {
+    public static void BookRet(Session session, Integer bk_ex_id) {
         ProcedureCall query = session.createStoredProcedureCall("book_ret");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("bk_ex_id", bk_ex_id);
@@ -298,7 +298,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List GetExBookHistory(Session session, Integer bk_ex_id) {
+    public static List GetExBookHistory(Session session, Integer bk_ex_id) {
         ProcedureCall query = session.createStoredProcedureCall("get_ex_book_history");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("bk_ex_id", bk_ex_id);
@@ -307,7 +307,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List GetReaderHistory(Session session, Integer _lib_card_id) {
+    public static List GetReaderHistory(Session session, Integer _lib_card_id) {
         ProcedureCall query = session.createStoredProcedureCall("get_reader_history");
         query.registerParameter("_lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("_lib_card_id", _lib_card_id);
@@ -316,7 +316,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List GetReaderCurBook(Session session, Integer _lib_card_id) {
+    public static List GetReaderCurBook(Session session, Integer _lib_card_id) {
         ProcedureCall query = session.createStoredProcedureCall("get_reader_cur_book");
         query.registerParameter("_lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("_lib_card_id", _lib_card_id);
@@ -325,7 +325,7 @@ public class SQL_FuncCall {
     }
 
 
-    public List GetReaderOverdueBook(Session session, Integer _lib_card_id, Boolean only_cur) {
+    public static List GetReaderOverdueBook(Session session, Integer _lib_card_id, Boolean only_cur) {
         ProcedureCall query = session.createStoredProcedureCall("get_reader_overdue_book");
         query.registerParameter("_lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("only_cur", Boolean.class, ParameterMode.IN).enablePassingNulls(true);
@@ -336,7 +336,7 @@ public class SQL_FuncCall {
     }
 
 
-    public Boolean ReaderCanPassLibCard(Session session, Integer _lib_card_id) {
+    public static Boolean ReaderCanPassLibCard(Session session, Integer _lib_card_id) {
         ProcedureCall query = session.createStoredProcedureCall("reader_can_pass_lib_card");
         query.registerParameter("_lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.setParameter("_lib_card_id", _lib_card_id);
@@ -345,7 +345,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookExDereg(Session session, Integer bk_ex_id, Boolean need_to_ret) {
+    public static void BookExDereg(Session session, Integer bk_ex_id, Boolean need_to_ret) {
         ProcedureCall query = session.createStoredProcedureCall("book_ex_dereg");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("need_to_ret", Boolean.class, ParameterMode.IN).enablePassingNulls(true);
@@ -356,7 +356,7 @@ public class SQL_FuncCall {
     }
 
 
-    public void BookDereg(Session session, Integer _book_id, Boolean need_to_ret) {
+    public static void BookDereg(Session session, Integer _book_id, Boolean need_to_ret) {
         ProcedureCall query = session.createStoredProcedureCall("book_dereg");
         query.registerParameter("_book_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("need_to_ret", Boolean.class, ParameterMode.IN).enablePassingNulls(true);

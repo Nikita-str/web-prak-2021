@@ -10,6 +10,9 @@ DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS authors CASCADE;
 DROP TABLE IF EXISTS publishers CASCADE;
 DROP TABLE IF EXISTS readers;
+
+SET ROLE prak_user;
+SELECT current_user
 */
 
 CREATE TABLE publishers (

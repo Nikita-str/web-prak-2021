@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "authors")
@@ -9,7 +10,7 @@ public class Authors {
   @Id
   @Column(name = "author_id", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long authorId;
+  private Integer authorId;
   @Column(name = "second_name", nullable = false)
   private String secondName;
   @Column(name = "first_name", nullable = false)
@@ -17,7 +18,18 @@ public class Authors {
   @Column(name = "patronymic")
   private String patronymic;
 
+  @ManyToMany
+  private Set<Books> books;
+
   public Authors() { }
+
+  public Authors(Integer id, String s_name, String f_name, String patr)
+  {
+    this.authorId = id;
+    this.secondName = s_name;
+    this.firstName = f_name;
+    this.patronymic = patr;
+  }
 
   public Authors(String s_name, String f_name, String patr)
   {
@@ -26,7 +38,14 @@ public class Authors {
     this.patronymic = patr;
   }
 
-  public long getAuthorId() { return authorId; }
+  public Authors(Integer id, String s_name, String f_name)
+  {
+    this.authorId = id;
+    this.secondName = s_name;
+    this.firstName = f_name;
+  }
+
+  public Integer getAuthorId() { return authorId; }
   // public void setAuthorId(long authorId) {this.authorId = authorId;}
 
 

@@ -18,13 +18,11 @@
 
         <mapping class="models.Authors" />
 
-        <!--
         <mapping class="models.Publishers" />
         <mapping class="models.Readers" />
         <mapping class="models.Books" />
-        <mapping class="models.AuthorBook" />
+        <!--mapping class="models.AuthorBook" /-->
         <mapping class="models.BookExamples" />
         <mapping class="models.BookExHistory" />
-        -->
     </session-factory>
 </hibernate-configuration>

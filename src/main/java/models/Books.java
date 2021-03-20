@@ -3,6 +3,7 @@ package models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -31,6 +32,9 @@ public class Books {
 
   @Column(name = "decommissioned")
   private boolean decommissioned;
+
+  @ManyToMany
+  private Set<Authors> authors;
 
   public Books(){}
   public Books(String title, String about, Publishers pub, Date pub_year, String isbn, boolean decommissioned)

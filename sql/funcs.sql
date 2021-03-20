@@ -1,3 +1,8 @@
+/*
+SET ROLE prak_user
+SELECT current_user
+*/
+
 --DROP FUNCTION find_publisher(text, bool)
 CREATE OR REPLACE FUNCTION find_publisher(publ_name TEXT, complete_match BOOL)
 RETURNS SETOF publishers 
@@ -127,7 +132,7 @@ AS $$ BEGIN
 	patr = LOWER(patr);
 	ret_author_id = NULL;
 	SELECT author_id FROM authors WHERE 
-		first_name = f_name AND second_name = s_name AND patronymic = patr INTO ret_author_id;
+		first_name = f_name AND second_name = s_name AND (patronymic IS NULL OR patronymic = patr) INTO ret_author_id;
 		
 	IF (ret_author_id IS NULL) THEN
 		SELECT * FROM add_author(f_name, s_name, patr) INTO ret_author_id;

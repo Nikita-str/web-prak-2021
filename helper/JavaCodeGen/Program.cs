@@ -212,12 +212,12 @@ namespace JavaCodeGen
       
       StreamWriter sw = new StreamWriter("SQL_FuncCall.java");
 
+      sw.WriteLine();
       sw.WriteLine("import org.hibernate.Session;");
       sw.WriteLine("import javax.persistence.ParameterMode;");
       sw.WriteLine("import org.hibernate.procedure.ProcedureCall;");
       sw.WriteLine("import java.sql.Date;");
       sw.WriteLine("import java.util.List;");
-      
       sw.WriteLine();
       sw.WriteLine("public class SQL_FuncCall {");
       CodeTab.AddTab();
@@ -265,7 +265,7 @@ namespace JavaCodeGen
 
         var temp1 = ps.GetRetValue();
         if(!temp1.Item1) { Console.WriteLine("Hmm... [4]"); continue; }
-        func_str = func_str.AddCodeLine("public " + temp1.Item2 + " " + name_of_func.ToJavaFuncName() + "(Session session, " + ps.ToJavaCode() +  ") {");
+        func_str = func_str.AddCodeLine("public static " + temp1.Item2 + " " + name_of_func.ToJavaFuncName() + "(Session session, " + ps.ToJavaCode() +  ") {");
         CodeTab.AddTab();
         func_str = func_str.AddCodeLine("ProcedureCall query = session.createStoredProcedureCall(\"" + name_of_func + "\");");
         func_str += ps.RegParam();

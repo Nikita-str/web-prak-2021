@@ -1,9 +1,17 @@
 INSERT INTO publishers(p_name) VALUES ('first izd'), ('fill i.'), ('second publisher');
 
 /*
+DELETE FROM author_book WHERE TRUE;
 DELETE FROM authors WHERE TRUE;
+DELETE FROM book_ex_history WHERE TRUE;
+DELETE FROM book_examples WHERE TRUE;
 DELETE FROM books WHERE TRUE;
 DELETE FROM author_book WHERE TRUE;
+DELETE FROM readers WHERE TRUE;
+DELETE FROM publishers WHERE TRUE;
+
+SET ROLE prak_user
+SELECT current_user
 */
 
 SELECT add_author('Братья', 'Стругацкие', NULL);

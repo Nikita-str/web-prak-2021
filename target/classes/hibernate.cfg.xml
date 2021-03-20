@@ -6,8 +6,8 @@
         <property name="connection.driver_class">org.postgresql.Driver</property>
 
         <property name="connection.url">jdbc:postgresql://localhost:5432/db_library</property>
-        <property name="connection.username">postgres</property>
-        <property name="connection.password">applej</property>
+        <property name="connection.username">prak_user</property>
+        <property name="connection.password">prak_user</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
 
         <property name="show_sql">false</property>
@@ -15,17 +15,14 @@
 
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <property name="hibernate.current_session_context_class">thread</property>
-        <!--<property name="hibernate.param_null_passing">true</property> -->
 
         <mapping class="models.Authors" />
 
-        <!--
         <mapping class="models.Publishers" />
         <mapping class="models.Readers" />
         <mapping class="models.Books" />
-        <mapping class="models.AuthorBook" />
+        <!--mapping class="models.AuthorBook" /-->
         <mapping class="models.BookExamples" />
         <mapping class="models.BookExHistory" />
-        -->
     </session-factory>
 </hibernate-configuration>

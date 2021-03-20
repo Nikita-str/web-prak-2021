@@ -3,16 +3,19 @@ import DAO.Interfaces.I_AuthorsDAO;
 import models.Authors;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import models.Books;
 import org.hibernate.Session;
-import org.hibernate.procedure.ProcedureCall;
-import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.query.Query;
 import utils.HibernateSessionFactoryUtil;
+import utils.SQL_FuncCall;
 
-import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
-import javax.persistence.TemporalType;
+
 
 public class StdDAO_Authors implements I_AuthorsDAO {
 
@@ -21,6 +24,8 @@ public class StdDAO_Authors implements I_AuthorsDAO {
         Authors aut = null;
         Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         ses.beginTransaction();
+
+        aut = GetAuthorById(SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr));
 
         ses.getTransaction().commit();
         ses.close();
@@ -32,55 +37,12 @@ public class StdDAO_Authors implements I_AuthorsDAO {
         return GetAuthorById(GetAuthorId(f_name, s_name, patr));
     }
 
-    //public Tuple<Long, Long> heh(){ return (1, 2);}
-    public List heh() {
-        Session ses = null;
-        StoredProcedureQuery query = ses
-                .createStoredProcedureQuery("get_author_id");
-        return query.getResultList();
-    }
-
-    public Integer kek() {
-        Session ses = null;
-        StoredProcedureQuery query = ses
-                .createStoredProcedureQuery("get_author_id");
-        return (Integer) query.getOutputParameterValue("ret_author_id");
-    }
-
-    public Integer kekheh() {
-        Session ses = null;
-        StoredProcedureQuery query = ses
-                .createStoredProcedureQuery("get_author_id");
-        return (Integer) query.getSingleResult();
-    }
-
     @Override
-    public Long GetAuthorId(String f_name, String s_name, String patr) throws SQLException {
-        Long aut_id = null;
+    public Integer GetAuthorId(String f_name, String s_name, String patr) throws SQLException {
         Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         ses.beginTransaction();
-        /*
-        StoredProcedureQuery query = ses
-                .createStoredProcedureQuery("get_author_id")
-                .registerStoredProcedureParameter("f_name", String.class, ParameterMode.IN)
-                .registerStoredProcedureParameter("s_name", String.class, ParameterMode.IN)
-                .registerStoredProcedureParameter("patr", String.class, ParameterMode.IN)
-                .registerStoredProcedureParameter("ret_author_id", Integer.class, ParameterMode.OUT)
-                .setParameter("f_name", f_name)
-                .setParameter("s_name", s_name)
-                .setParameter("patr", patr);
-        */
-        ProcedureCall query = ses.createStoredProcedureCall("get_author_id");
-        query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
-        query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
-        query.registerParameter("patr", String.class, ParameterMode.IN).enablePassingNulls(true);
-        query.registerParameter("ret_author_id", Integer.class, ParameterMode.OUT);
-        query.setParameter("f_name", f_name)
-                .setParameter("s_name", s_name)
-                .setParameter("patr", patr);
 
-        query.execute();
-        aut_id = Long.valueOf((Integer) query.getOutputParameterValue("ret_author_id"));
+        Integer aut_id = SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr);
 
         ses.getTransaction().commit();
         ses.close();
@@ -88,7 +50,8 @@ public class StdDAO_Authors implements I_AuthorsDAO {
     }
 
     @Override
-    public Authors GetAuthorById(long id) throws SQLException {
+    public Authors GetAuthorById(Integer id) throws SQLException {
+        System.out.println(id);
         Authors aut = null;
         Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         ses.beginTransaction();
@@ -97,4 +60,33 @@ public class StdDAO_Authors implements I_AuthorsDAO {
         ses.close();
         return aut;
     }
+
+    public List<Authors> GetAuthorOfBook(Books book) throws SQLException {
+        Long id_val = book.getBookId();
+        return GetAuthorOfBook(id_val.intValue());
+    }
+
+    public List<Authors> GetAuthorOfBook(Integer book_id) throws SQLException {
+        Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        ses.beginTransaction();
+
+        //List ret = new ArrayList<Authors>();
+        //ret = (List<Authors>)SQL_FuncCall.GetAuthorsOfBook(ses, book_id.intValue());
+        //List<Object[]> pre_ret = SQL_FuncCall.GetAuthorsOfBook(ses, book_id.intValue());
+        //StoredProcedureQuery qq = ses.createNamedStoredProcedureQuery("get_authors_of_book");
+        /*Query qq = ses.createSQLQuery("SELECT * FROM get_authors_of_book(:_book_id)");
+        qq.setParameter("_book_id", book_id);
+        qq.getResultList();
+        List ret = qq.list();*/
+
+        List ret = new ArrayList<Authors>();
+        List<Object[]> pre_ret = (List<Object[]>) SQL_FuncCall.GetAuthorsOfBook(ses, book_id);
+        pre_ret.forEach(o -> ret.add(ses.load(Authors.class, (Integer)o[0])));
+
+        ses.getTransaction().commit();
+        ses.close();
+        return ret;
+    }
+
+
 }
