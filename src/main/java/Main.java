@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String args[]) throws SQLException {
-        //System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthorId("Станислав", "Лем", "герман"));
+        System.out.println("AUTHORS:");
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
 
@@ -31,6 +31,23 @@ public class Main {
         System.out.println("  | GetAuthorOfBook |  ");
         l_as =  StdDAO_Factory.getInstance().getAuthorDao().FindAuthor("Бр", "сТр", false);
         l_as.forEach(o -> System.out.println(o));
+
+        System.out.println("\n");
+        System.out.println("PUBLISHERS:");
+        List<Publishers> l_pubs =  StdDAO_Factory.getInstance().getPublisherDao().FindPublisher("fi", false);
+        l_pubs.forEach(o -> System.out.println(o));
+
+        l_pubs =  StdDAO_Factory.getInstance().getPublisherDao().FindPublisher("abra-kadabra", false);
+        l_pubs.forEach(o -> System.out.println(o));
+
+        System.out.println("\n");
+        System.out.println("READERS:");
+        List<BookExHistory> l_bks = StdDAO_Factory.getInstance().getReaderDao().GetReaderCurBook(1);
+        l_bks.forEach(o -> System.out.println(o));
+
+        l_bks = StdDAO_Factory.getInstance().getReaderDao().GetReaderCurBook(777);
+        l_bks.forEach(o -> System.out.println(o));
+
         return;
     }
 }

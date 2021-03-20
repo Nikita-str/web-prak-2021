@@ -4,7 +4,6 @@ import models.Authors;
 import models.Books;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 public interface I_AuthorsDAO {

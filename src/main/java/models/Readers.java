@@ -9,7 +9,7 @@ public class Readers {
   @Id
   @Column(name = "library_card_id", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long libraryCardId;
+  private Integer libraryCardId;
   @Column(name = "second_name", nullable = false)
   private String secondName;
   @Column(name = "first_name", nullable = false)
@@ -23,12 +23,10 @@ public class Readers {
   @Column(name = "lib_card_passed")
   private boolean libCardPassed;
 
-  public long getLibraryCardId() {
+  public Integer getLibraryCardId() {
     return libraryCardId;
   }
-  public void setLibraryCardId(long libraryCardId) {
-    this.libraryCardId = libraryCardId;
-  }
+  //public void setLibraryCardId(long libraryCardId) { this.libraryCardId = libraryCardId; }
 
   public String getSecondName() {
     return secondName;
@@ -68,7 +66,13 @@ public class Readers {
   public boolean getLibCardPassed() {
     return libCardPassed;
   }
-  public void setLibCardPassed(boolean libCardPassed) {
-    this.libCardPassed = libCardPassed;
+
+  @Override
+  public String toString(){
+    String dop_str = "";
+    if(libCardPassed)dop_str = "(Passed)";
+    return "Readers {Lib Card Id: " + libraryCardId + " " + libCardPassed +
+            " | name: " + firstName + " | second name: " + secondName + " | patronymic :" + patronymic +
+            " | address: " + address + "}";
   }
 }

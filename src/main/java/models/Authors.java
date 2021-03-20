@@ -20,14 +20,6 @@ public class Authors {
 
   public Authors() { }
 
-  public Authors(Integer id, String s_name, String f_name, String patr)
-  {
-    this.authorId = id;
-    this.secondName = s_name;
-    this.firstName = f_name;
-    this.patronymic = patr;
-  }
-
   public Authors(String s_name, String f_name, String patr)
   {
     this.secondName = s_name;

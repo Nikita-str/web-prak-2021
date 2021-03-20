@@ -8,7 +8,8 @@ import java.sql.Date;
 public class BookExHistory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long phantomId;
+  @Column(name = "beh_id", nullable = false, updatable = false)
+  private Integer behId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_ex_id")
@@ -34,6 +35,8 @@ public class BookExHistory {
     this.sheduleRetDate = sheduleRetDate;
     this.realRetDate = realRetDate;
   }
+
+  public Integer getBehId(){return behId;}
 
   public BookExamples getBookEx() {
     return bookEx;
@@ -70,4 +73,9 @@ public class BookExHistory {
     this.realRetDate = realRetDate;
   }
 
+  @Override
+  public String toString(){
+    return "Author {Id: " + behId + " | book ex id: " + bookEx.getBookExId() + " | reader id: " + reader.getLibraryCardId() +
+            " | Issued: " + dateOfIssue + " | Shedule Ret:" + sheduleRetDate + " | Real Ret: " + realRetDate+ "}";
+  }
 }

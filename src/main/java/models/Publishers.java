@@ -9,7 +9,7 @@ public class Publishers {
   @Id
   @Column(name = "p_id", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long pId;
+  private Integer pId;
 
   @Column(name = "p_name", unique = true)
   private String pName;
@@ -17,7 +17,7 @@ public class Publishers {
   public Publishers(){}
   public Publishers(String pub_name){this.pName = pub_name;}
 
-  public long getPId() {
+  public Integer getPId() {
     return pId;
   }
   //public void setPId(long pId) { this.pId = pId; }
@@ -29,4 +29,5 @@ public class Publishers {
     this.pName = pName;
   }
 
+  @Override public String toString(){ return "Publisher {Id: " + pId + " | name: " + pName + "}"; }
 }

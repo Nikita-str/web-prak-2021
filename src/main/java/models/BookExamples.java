@@ -9,7 +9,7 @@ public class BookExamples {
   @Id
   @Column(name = "book_ex_id", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long bookExId;
+  private int bookExId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id")
@@ -29,29 +29,24 @@ public class BookExamples {
     this.decommissioned = decommissioned;
   }
 
-  public long getBookExId() {
+  public int getBookExId() {
     return bookExId;
   }
-  //public void setBookExId(long bookExId) {this.bookExId = bookExId;}
 
   public Books getBook() {
     return book;
-  }
-  public void setBook(Books book) {
-    this.book = book;
   }
 
   public boolean getSpare() {
     return spare;
   }
-  public void setSpare(boolean spare) {
-    this.spare = spare;
-  }
 
   public boolean getDecommissioned() {
     return decommissioned;
   }
-  public void setDecommissioned(boolean decommissioned) {
-    this.decommissioned = decommissioned;
+
+  @Override
+  public String toString(){
+    return "Book(EX) {Id: " + bookExId + " | book name: " + book.getTitle() + " | spare: " + spare + " | decommissioned:" + decommissioned + "}";
   }
 }
