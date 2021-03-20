@@ -73,6 +73,14 @@ public class Main {
         List<BookExamples> l_bes = StdDAO_Factory.getInstance().getBookDao().GetBookEx(2);
         l_bes.forEach(o -> System.out.println(o));
 
+        System.out.println("\n");
+        System.out.println("READERS:");
+        List<Readers> list_rs = inst.getReaderDao().FindReader_Surname("второй");
+        list_rs.forEach(System.out::println);
+        System.out.println("next -->");
+        list_rs = inst.getReaderDao().FindReader_PhoneNumber("8(16)326");
+        list_rs.forEach(System.out::println);
+
         return;
     }
 }

@@ -34,4 +34,8 @@ public interface I_ReadersDAO {
 
     public void BookRet(Integer bk_ex_id);
 
+    public List<Readers> FindReader_Surname(String surname);
+    public List<Readers> FindReader(String first_name, String second_name);
+    public List<Readers> FindReader(String first_name, String second_name, String patr);
+    public List<Readers> FindReader_PhoneNumber(String phone_number);
 }

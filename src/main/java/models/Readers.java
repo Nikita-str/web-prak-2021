@@ -26,21 +26,16 @@ public class Readers {
   public Integer getLibraryCardId() {
     return libraryCardId;
   }
-  //public void setLibraryCardId(long libraryCardId) { this.libraryCardId = libraryCardId; }
 
   public String getSecondName() {
     return secondName;
   }
-  public void setSecondName(String secondName) {
-    this.secondName = secondName;
-  }
+  public void setSecondName(String secondName) {this.secondName = secondName;}
 
   public String getFirstName() {
     return firstName;
   }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+  public void setFirstName(String firstName) {this.firstName = firstName;}
 
   public String getPatronymic() {
     return patronymic;
@@ -73,6 +68,6 @@ public class Readers {
     if(libCardPassed)dop_str = "(Passed)";
     return "Readers {Lib Card Id: " + libraryCardId + " " + libCardPassed +
             " | name: " + firstName + " | second name: " + secondName + " | patronymic :" + patronymic +
-            " | address: " + address + "}";
+            " | address: " + address + " | phone: " + phoneNumber + "}";
   }
 }

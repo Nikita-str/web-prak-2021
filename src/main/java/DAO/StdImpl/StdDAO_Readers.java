@@ -2,11 +2,14 @@ package DAO.StdImpl;
 import DAO.Interfaces.I_ReadersDAO;
 import DAO.Interfaces.StdImpl_ReaderDAO;
 import models.BookExHistory;
+import models.Books;
 import models.Readers;
 import utils.SQL_FuncCall;
 import utils.SessionHelper;
 
+import javax.persistence.TypedQuery;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StdDAO_Readers extends StdImpl_ReaderDAO implements I_ReadersDAO {
@@ -50,4 +53,41 @@ public class StdDAO_Readers extends StdImpl_ReaderDAO implements I_ReadersDAO {
     }
 
     @Override public void BookRet(Integer bk_ex_id) { SessionHelper.InSessionAct(ses -> SQL_FuncCall.BookRet(ses, bk_ex_id)); }
+
+    @Override public List<Readers> FindReader_Surname(String s_name) {
+        if(s_name == null || s_name.length() == 0)return new ArrayList<>();
+        return SessionHelper.InSessionActWithR((ses -> {
+            TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE " + " second_name = '" + s_name + "'", Readers.class);
+            return q.getResultList();
+        }));
+    }
+
+    @Override public List<Readers> FindReader(String first_name, String second_name) {
+        if(first_name == null)return FindReader_Surname(second_name);
+        return SessionHelper.InSessionActWithR((ses -> {
+            TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE second_name = '" + second_name + "' AND  first_name = '" + first_name + "'", Readers.class);
+            return q.getResultList();
+        }));
+    }
+
+    @Override public List<Readers> FindReader(String first_name, String second_name, String patr) {
+        if(patr == null)return FindReader(first_name, second_name);
+        return SessionHelper.InSessionActWithR((ses -> {
+            TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE second_name = '" + second_name +
+                    "' AND  first_name = '" + first_name + "' AND  patronymic = '" + patr + "'", Readers.class);
+            return q.getResultList();
+        }));
+    }
+
+    @Override public List<Readers> FindReader_PhoneNumber(String phone_number) {
+        if(phone_number == null)return new ArrayList<>();
+        String wline_s = "REPLACE(REPLACE(REPLACE(";
+        String wline_e = ", '-', ''), '(', ''), ')', '')";
+        return SessionHelper.InSessionActWithR((ses -> {
+            TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE "
+                    + wline_s + "phone_number" + wline_e +
+                    " LIKE(" + wline_s + "'"+ phone_number + "'" + wline_e + " || '%')", Readers.class);
+            return q.getResultList();
+        }));
+    }
 }
