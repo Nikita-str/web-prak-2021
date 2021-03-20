@@ -195,16 +195,21 @@ public class SQL_FuncCall {
     }
 
 
-    public static void AddReader(Session session, String f_name, String s_name, String patr) {
+    public static Integer AddReader(Session session, String f_name, String s_name, String patr, String address, String phone_number) {
         ProcedureCall query = session.createStoredProcedureCall("add_reader");
         query.registerParameter("f_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("s_name", String.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("patr", String.class, ParameterMode.IN).enablePassingNulls(true);
+        query.registerParameter("address", String.class, ParameterMode.IN).enablePassingNulls(true);
+        query.registerParameter("phone_number", String.class, ParameterMode.IN).enablePassingNulls(true);
+        query.registerParameter("ret_reader_id", Integer.class, ParameterMode.OUT);
         query.setParameter("f_name", f_name);
         query.setParameter("s_name", s_name);
         query.setParameter("patr", patr);
+        query.setParameter("address", address);
+        query.setParameter("phone_number", phone_number);
         query.execute();
-        return;
+        return (Integer) query.getOutputParameterValue("ret_reader_id");
     }
 
 

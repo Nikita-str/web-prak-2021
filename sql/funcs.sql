@@ -198,8 +198,7 @@ LANGUAGE plpgsql;
 --- END : BOOKS -------------------------------------------------------------------------------------------------
 
 
-CREATE OR REPLACE FUNCTION add_reader(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), 
-									  address TEXT, phone_number VARCHAR(30), OUT ret_reader_id INTEGER)
+CREATE OR REPLACE FUNCTION add_reader(f_name VARCHAR(40), s_name VARCHAR(40), patr VARCHAR(40), address TEXT, phone_number VARCHAR(30), OUT ret_reader_id INTEGER)
 AS $$ BEGIN
 	WITH reader AS
 	(

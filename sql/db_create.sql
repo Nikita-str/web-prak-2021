@@ -67,6 +67,7 @@ CREATE TABLE readers (
 );
 
 CREATE TABLE book_ex_history (
+	beh_id SERIAL PRIMARY KEY,
 	book_ex_id INTEGER REFERENCES book_examples(book_ex_id) NOT NULL,
 	lib_card_id INTEGER REFERENCES readers(library_card_id) NOT NULL,
 	date_of_issue DATE NOT NULL,
