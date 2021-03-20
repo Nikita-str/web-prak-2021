@@ -1,6 +1,7 @@
 package DAO.StdImpl;
 
 import DAO.Interfaces.I_AuthorsDAO;
+import DAO.Interfaces.I_BooksDAO;
 import DAO.Interfaces.I_PublishersDAO;
 import DAO.Interfaces.I_ReadersDAO;
 
@@ -8,9 +9,9 @@ public class StdDAO_Factory {
     private static I_AuthorsDAO DAO_Author = null;
     private static I_PublishersDAO DAO_Publisher = null;
     private static I_ReadersDAO DAO_Reader = null;
+    private static I_BooksDAO DAO_Book= null;
 
     private static StdDAO_Factory instance = null;
-
 
     public static synchronized StdDAO_Factory getInstance() {
         if (instance == null) instance = new StdDAO_Factory();
@@ -30,5 +31,10 @@ public class StdDAO_Factory {
     public I_ReadersDAO getReaderDao(){
         if(DAO_Reader == null) DAO_Reader = new StdDAO_Readers();
         return DAO_Reader;
+    }
+
+    public I_BooksDAO getBookDao(){
+        if(DAO_Book == null) DAO_Book = new StdDAO_Books();
+        return DAO_Book;
     }
 }

@@ -28,7 +28,6 @@ public class Main {
         l_as.forEach(o -> System.out.println(o));
 
         System.out.println();
-        System.out.println("  | GetAuthorOfBook |  ");
         l_as =  StdDAO_Factory.getInstance().getAuthorDao().FindAuthor("Бр", "сТр", false);
         l_as.forEach(o -> System.out.println(o));
 
@@ -47,6 +46,16 @@ public class Main {
 
         l_bks = StdDAO_Factory.getInstance().getReaderDao().GetReaderCurBook(777);
         l_bks.forEach(o -> System.out.println(o));
+
+        System.out.println("\n");
+        System.out.println("BOOKS:");
+        List<Books> l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind_Isbn("978-51");
+        l_bs.forEach(o -> System.out.println(o));
+
+        System.out.println("\n");
+        System.out.println("BOOKS EXAMPLES:");
+        List<BookExamples> l_bes = StdDAO_Factory.getInstance().getBookDao().GetBookEx(2);
+        l_bes.forEach(o -> System.out.println(o));
 
         return;
     }

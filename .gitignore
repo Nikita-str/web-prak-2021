@@ -1,3 +1,8 @@
+# Java
+*.class
+*.ctxt
+*.jar
+
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -34,3 +39,4 @@
 *.scc
 *.exe
 helper/JavaCodeGen/bin/Debug/temp.java
+.idea/.name
