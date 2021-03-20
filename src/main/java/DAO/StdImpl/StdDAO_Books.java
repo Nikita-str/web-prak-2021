@@ -94,7 +94,7 @@ public class StdDAO_Books extends StdImpl_BookDAO implements I_BooksDAO {
     @Override
     public List<Books> BookFind(String title, Integer pub_id, Integer pub_year, String isbn, boolean with_decommissioned) {
         if(title == null && pub_id == null && pub_year == null && isbn == null)return BookFind_All(with_decommissioned);
-        String add_title = (title == null) ? "" : " AND title LIKE ('" + title + "' || '%') ";
+        String add_title = (title == null) ? "" : " AND title LIKE (LOWER('" + title + "') || '%') ";
         String add_isbn = (isbn == null) ? "" : " AND REPLACE(isbn, '-', '') LIKE (REPLACE('"+ isbn + "', '-', '') || '%')  ";
         String add_pid = (pub_id == null) ? "" : " AND publisher_id = " + pub_id + " ";
         String add_year = (pub_year == null) ? "" : " AND EXTRACT(YEAR FROM pub_year) = " + pub_year + " ";

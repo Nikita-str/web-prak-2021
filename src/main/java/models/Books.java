@@ -3,6 +3,7 @@ package models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.Set;
 
 @Entity
@@ -87,5 +88,18 @@ public class Books {
   }
   public void setDecommissioned(boolean decommissioned) {
     this.decommissioned = decommissioned;
+  }
+
+  @Override
+  public String toString(){
+    Calendar c = Calendar.getInstance();
+    c.setTime(pubYear);
+    int year = c.get(Calendar.YEAR);
+    return "Book{Id: " + bookId + " | book name: " + title +
+            " | about: " + ((about == null)? "---" : about.substring(0, 15) + "...") +
+            " | publisher: " + ((publisher == null)? "---" : publisher.getPName()) +
+            " | pub year: " + ((pubYear == null)? "---" : year) +
+            " | ISBN: " + ((isbn == null)? "---" : isbn) +
+            " | decommissioned:" + decommissioned + "}";
   }
 }

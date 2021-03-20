@@ -47,10 +47,26 @@ public class Main {
         l_bks = StdDAO_Factory.getInstance().getReaderDao().GetReaderCurBook(777);
         l_bks.forEach(o -> System.out.println(o));
 
+        StdDAO_Factory inst = StdDAO_Factory.getInstance();
         System.out.println("\n");
         System.out.println("BOOKS:");
         List<Books> l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind_Isbn("978-51");
         l_bs.forEach(o -> System.out.println(o));
+        System.out.println("next -->");
+        l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind_Title("суМма");
+        l_bs.forEach(o -> System.out.println(o));
+        System.out.println("next -->");
+        l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind_Year(1964);
+        l_bs.forEach(o -> System.out.println(o));
+        System.out.println("next -->");
+        l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind_Publisher(4);
+        l_bs.forEach(o -> System.out.println(o));
+        System.out.println("next -->");
+        l_bs = StdDAO_Factory.getInstance().getBookDao().BookFind("ИСП", null, 1964, null, false);
+        l_bs.forEach(System.out::println);
+        System.out.println("next -->");
+        l_bs = inst.getBookDao().BookFind(null, inst.getPublisherDao().GetPublisherId("АСТ"), 1964, null, false);
+        l_bs.forEach(System.out::println);
 
         System.out.println("\n");
         System.out.println("BOOKS EXAMPLES:");
