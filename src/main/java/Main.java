@@ -22,9 +22,15 @@ public class Main {
             System.out.println("oh no... exception");
         }
 
+        System.out.println();
+        System.out.println("  | GetAuthorOfBook |  ");
         List<Authors> l_as = StdDAO_Factory.getInstance().getAuthorDao().GetAuthorOfBook(1);
         l_as.forEach(o -> System.out.println(o));
 
+        System.out.println();
+        System.out.println("  | GetAuthorOfBook |  ");
+        l_as =  StdDAO_Factory.getInstance().getAuthorDao().FindAuthor("Бр", "сТр", false);
+        l_as.forEach(o -> System.out.println(o));
         return;
     }
 }

@@ -18,9 +18,6 @@ public class Authors {
   @Column(name = "patronymic")
   private String patronymic;
 
-  @ManyToMany
-  private Set<Books> books;
-
   public Authors() { }
 
   public Authors(Integer id, String s_name, String f_name, String patr)
@@ -36,13 +33,6 @@ public class Authors {
     this.secondName = s_name;
     this.firstName = f_name;
     this.patronymic = patr;
-  }
-
-  public Authors(Integer id, String s_name, String f_name)
-  {
-    this.authorId = id;
-    this.secondName = s_name;
-    this.firstName = f_name;
   }
 
   public Integer getAuthorId() { return authorId; }

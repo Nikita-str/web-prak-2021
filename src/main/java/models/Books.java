@@ -12,7 +12,7 @@ public class Books {
   @Id
   @Column(name = "book_id", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long bookId;
+  private int bookId;
 
   @Column(name = "title", nullable = false)
   private String title;
@@ -33,9 +33,6 @@ public class Books {
   @Column(name = "decommissioned")
   private boolean decommissioned;
 
-  @ManyToMany
-  private Set<Authors> authors;
-
   public Books(){}
   public Books(String title, String about, Publishers pub, Date pub_year, String isbn, boolean decommissioned)
   {
@@ -47,7 +44,7 @@ public class Books {
     this.decommissioned = decommissioned;
   }
 
-  public long getBookId() {
+  public int getBookId() {
     return bookId;
   }
   //public void setBookId(long bookId) { this.bookId = bookId; }

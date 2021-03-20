@@ -1,5 +1,7 @@
 package DAO.StdImpl;
 import DAO.Interfaces.I_AuthorsDAO;
+import DAO.Interfaces.StdImpl_AuthorDAO;
+import com.sun.xml.internal.ws.handler.HandlerException;
 import models.Authors;
 
 import java.sql.SQLException;
@@ -13,23 +15,15 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import utils.HibernateSessionFactoryUtil;
 import utils.SQL_FuncCall;
+import utils.SessionHelper;
 
 import javax.persistence.StoredProcedureQuery;
 
-
-public class StdDAO_Authors implements I_AuthorsDAO {
+public class StdDAO_Authors extends StdImpl_AuthorDAO implements I_AuthorsDAO {
 
     @Override
     public Authors AddAuthor(String f_name, String s_name, String patr) throws SQLException {
-        Authors aut = null;
-        Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        ses.beginTransaction();
-
-        aut = GetAuthorById(SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr));
-
-        ses.getTransaction().commit();
-        ses.close();
-        return aut;
+        return SessionHelper.InSessionActWithR(ses -> ses.load(Authors.class, SQL_FuncCall.AddAuthor(ses, f_name, s_name, patr)));
     }
 
     @Override
@@ -39,54 +33,36 @@ public class StdDAO_Authors implements I_AuthorsDAO {
 
     @Override
     public Integer GetAuthorId(String f_name, String s_name, String patr) throws SQLException {
-        Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        ses.beginTransaction();
-
-        Integer aut_id = SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr);
-
-        ses.getTransaction().commit();
-        ses.close();
-        return aut_id;
+        return SessionHelper.InSessionActWithR(ses -> SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr));
     }
 
     @Override
     public Authors GetAuthorById(Integer id) throws SQLException {
-        System.out.println(id);
-        Authors aut = null;
-        Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        ses.beginTransaction();
-        aut = ses.load(Authors.class, id);
-        ses.getTransaction().commit();
-        ses.close();
-        return aut;
+        return SessionHelper.InSessionActWithR(ses -> ses.load(Authors.class, id));
     }
 
-    public List<Authors> GetAuthorOfBook(Books book) throws SQLException {
-        Long id_val = book.getBookId();
-        return GetAuthorOfBook(id_val.intValue());
-    }
-
+    @Override
     public List<Authors> GetAuthorOfBook(Integer book_id) throws SQLException {
-        Session ses = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        ses.beginTransaction();
-
-        //List ret = new ArrayList<Authors>();
-        //ret = (List<Authors>)SQL_FuncCall.GetAuthorsOfBook(ses, book_id.intValue());
-        //List<Object[]> pre_ret = SQL_FuncCall.GetAuthorsOfBook(ses, book_id.intValue());
-        //StoredProcedureQuery qq = ses.createNamedStoredProcedureQuery("get_authors_of_book");
-        /*Query qq = ses.createSQLQuery("SELECT * FROM get_authors_of_book(:_book_id)");
-        qq.setParameter("_book_id", book_id);
-        qq.getResultList();
-        List ret = qq.list();*/
-
-        List ret = new ArrayList<Authors>();
-        List<Object[]> pre_ret = (List<Object[]>) SQL_FuncCall.GetAuthorsOfBook(ses, book_id);
-        pre_ret.forEach(o -> ret.add(ses.load(Authors.class, (Integer)o[0])));
-
-        ses.getTransaction().commit();
-        ses.close();
-        return ret;
+        return SessionHelper.InSessionActWithL(ses -> SQL_FuncCall.GetAuthorsOfBook(ses, book_id), Authors.class);
     }
 
+    @Override
+    public void AddAuthorToBook(Integer author_id, Integer book_id) throws SQLException {
+        SessionHelper.InSessionAct(ses -> SQL_FuncCall.AddAuthorToBook(ses, author_id, book_id));
+    }
 
+    @Override
+    public List<Authors> FindAuthor(String f_name, String s_name, String patr, Boolean complete_match) throws SQLException {
+        return SessionHelper.InSessionActWithL(ses -> SQL_FuncCall.FindAuthor(ses, f_name, s_name, patr, complete_match), Authors.class);
+    }
+
+    @Override
+    public List<Authors> FindAuthor(String s0, String s1, Boolean complete_match) throws SQLException {
+        return SessionHelper.InSessionActWithL(ses -> SQL_FuncCall.FindAuthor(ses, s0, s1, complete_match), Authors.class);
+    }
+
+    @Override
+    public List<Authors> FindAuthor(String surname, Boolean complete_match) throws SQLException {
+        return SessionHelper.InSessionActWithL(ses -> SQL_FuncCall.FindAuthor(ses, surname, complete_match), Authors.class);
+    }
 }
