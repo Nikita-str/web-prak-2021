@@ -33,3 +33,4 @@
 *.svclog
 *.scc
 *.exe
+helper/JavaCodeGen/bin/Debug/temp.java
