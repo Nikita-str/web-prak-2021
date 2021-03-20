@@ -7,6 +7,8 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
+
+/helper/*/bin/*
 /helper/*/obj/*
 .idea/.gitignore
 .idea/dataSources.xml
@@ -30,3 +32,4 @@
 *.pidb
 *.svclog
 *.scc
+*.exe
