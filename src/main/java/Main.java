@@ -1,6 +1,7 @@
 import DAO.StdImpl.StdDAO_Factory;
 import models.*;
 import org.hibernate.Session;
+import utils.DatabaseHelper;
 import utils.HibernateSessionFactoryUtil;
 import utils.SQL_FuncCall;
 
@@ -12,6 +13,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String args[]) throws SQLException {
+        //DatabaseHelper.DataBaseClear();
+        //DatabaseHelper.DataBaseStdInit();
+
         System.out.println("AUTHORS:");
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
