@@ -359,7 +359,7 @@ END; $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION reader_can_pass_lib_card(_lib_card_id INT)
 RETURNS BOOL AS $$ BEGIN
 	IF (SELECT lib_card_passed FROM readers WHERE library_card_id = _lib_card_id) THEN RETURN FALSE; END IF;
-	RETURN (SELECT COUNT(*) FROM get_reader_overdue_book(_lib_card_id, true)) = 0;
+	RETURN (SELECT COUNT(*) FROM get_reader_history(_lib_card_id) WHERE real_ret_date IS NULL) = 0;
 END; $$ LANGUAGE plpgsql;
 
 
