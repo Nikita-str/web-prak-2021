@@ -115,7 +115,7 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION add_author_to_book(author_id INT, book_id INT)
-RETURNS void
+RETURNS BOOL
 AS $$ 
 DECLARE 
 	a_id INT;
@@ -125,6 +125,7 @@ a_id = author_id;
 b_id = book_id;
 IF 0 = (SELECT COUNT(*) FROM author_book ab WHERE ab.book_id = b_id AND ab.author_id = a_id)
 THEN INSERT INTO author_book(author_id, book_id) VALUES (author_id, book_id); END IF;
+RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_authors_of_book(_book_id INT)
@@ -155,12 +156,13 @@ END; $$ LANGUAGE plpgsql;
 
 --- BOOK EXAMPLE
 CREATE OR REPLACE FUNCTION add_book_ex(bk_id INT, amount INT)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
 	WHILE (amount > 0) LOOP
 		INSERT INTO book_examples(book_id) VALUES (bk_id);
 		amount = amount - 1;
-	END LOOP;	
+	END LOOP;
+    RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 
 --- START : BOOKS -------------------------------------------------------------------------------------------------
@@ -256,7 +258,7 @@ END; $$ LANGUAGE plpgsql;
 --- BOOK_EX TAKE / RET  -----------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION book_take(bk_ex_id INT, lib_card_id INT, date_issue DATE, schedule_ret_date DATE)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
 	IF book_already_taked(bk_ex_id) THEN
 		RAISE EXCEPTION 'книга уже выдана [book ex. id = %]', bk_ex_id;
@@ -271,23 +273,24 @@ AS $$ BEGIN
 	INSERT INTO book_ex_history(book_ex_id, lib_card_id, date_of_issue, shedule_ret_date, real_ret_date) 
 	VALUES (bk_ex_id, lib_card_id, date_issue, schedule_ret_date, NULL);
 
-	UPDATE book_examples be SET spare = FALSE WHERE be.book_ex_id = bk_ex_id;		
+	UPDATE book_examples be SET spare = FALSE WHERE be.book_ex_id = bk_ex_id;
+    RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION book_take(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
-    PERFORM book_take(bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date);
+    RETURN book_take(bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date);
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION book_take(book_ex_id INT, lib_card_id INT, day_for_ret INT)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
-    PERFORM book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
+    RETURN book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION book_ret(bk_ex_id INT)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
 	IF NOT book_already_taked(bk_ex_id) THEN 
 		RAISE EXCEPTION 'book not taked [book ex. id = %]', bk_ex_id;
@@ -297,6 +300,7 @@ AS $$ BEGIN
 	WHERE (real_ret_date IS NULL) AND (beh.book_ex_id = bk_ex_id); 
 
 	UPDATE book_examples be SET spare = TRUE WHERE be.book_ex_id = bk_ex_id;
+    RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 --- BOOK_EX TAKE / RET  --------------------------------------------------------------------------------------------
 --- ----------------------------------------------------------------------------------------------------------------
@@ -362,24 +366,26 @@ END; $$ LANGUAGE plpgsql;
 --- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 --- DEREGISTER -----------------------------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION book_ex_dereg(bk_ex_id INT, need_to_ret BOOL)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
 	UPDATE book_examples SET decommissioned = TRUE WHERE book_ex_id = bk_ex_id;
 	IF NOT need_to_ret THEN
 		UPDATE book_ex_history SET real_ret_date = CAST(NOW() AS DATE) 
 		WHERE book_ex_id = bk_ex_id AND real_ret_date = NULL;
 	END IF;
+    RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION book_dereg(_book_id INT, need_to_ret BOOL)
-RETURNS void
+RETURNS BOOL
 AS $$ BEGIN
-	UPDATE book SET decommissioned = TRUE WHERE book_id = _book_id;
+	UPDATE books SET decommissioned = TRUE WHERE book_id = _book_id;
 	UPDATE book_examples SET decommissioned = TRUE WHERE book_id = _book_id;
 	IF NOT need_to_ret THEN
 		UPDATE book_ex_history SET real_ret_date = CAST(NOW() AS DATE) 
 		WHERE (real_ret_date = NULL) AND book_ex_id IN (SELECT book_ex_id FROM book_examples WHERE book_id = _book_id);
 	END IF;
+    RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 --- DEREGISTER -----------------------------------------------------------------------------------------------------
 --- ----------------------------------------------------------------------------------------------------------------

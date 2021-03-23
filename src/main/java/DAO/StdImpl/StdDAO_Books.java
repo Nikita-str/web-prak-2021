@@ -67,7 +67,7 @@ public class StdDAO_Books extends StdImpl_BookDAO implements I_BooksDAO {
         String add_spare = only_spare ? " AND spare = TRUE " : "";
         String add_decom = wo_decommissioned ? " AND decommissioned = FALSE " : "";
         return SessionHelper.InSessionActWithR((ses -> {
-            TypedQuery<BookExamples> q = ses.createQuery("FROM BookExamples WHERE book.bookId = :book_id" + add_spare + add_decom, BookExamples.class);
+            TypedQuery<BookExamples> q = ses.createQuery("FROM BookExamples WHERE book_id = :book_id" + add_spare + add_decom, BookExamples.class);
             q.setParameter("book_id", book_id);
             return q.getResultList();
         }));
@@ -86,7 +86,7 @@ public class StdDAO_Books extends StdImpl_BookDAO implements I_BooksDAO {
     public List<Books> BookFind_All(boolean with_decommissioned) {
         String add_s = with_decommissioned ? "" : " AND decommissioned = FALSE ";
         return SessionHelper.InSessionActWithR((ses -> {
-            TypedQuery<Books> q =ses.createQuery("FROM Books" + add_s);
+            TypedQuery<Books> q =ses.createQuery("FROM Books WHERE (1 = 1) " + add_s);
             return  q.getResultList();
         }));
     }
