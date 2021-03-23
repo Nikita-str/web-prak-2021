@@ -27,4 +27,9 @@ public class StdDAO_Publishers implements I_PublishersDAO {
     public Publishers GetPublisherById(Integer id) {
         return SessionHelper.InSessionActWithR(ses -> ses.load(Publishers.class, id));
     }
+
+    @Override
+    public List<Publishers> GetAllPublishers() {
+        return FindPublisher("", false);
+    }
 }

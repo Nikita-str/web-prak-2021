@@ -6,9 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 import utils.DatabaseHelper;
-import utils.HibernateSessionFactoryUtil;
-
-import java.sql.SQLException;
 
 public class TEST_Authors{
 

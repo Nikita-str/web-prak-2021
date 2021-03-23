@@ -10,4 +10,5 @@ public interface I_PublishersDAO {
     public Integer GetPublisherId(String publ_name);
     public Publishers GetPublisher(String publ_name);
     public Publishers GetPublisherById(Integer id);
+    public List<Publishers> GetAllPublishers();
 }
