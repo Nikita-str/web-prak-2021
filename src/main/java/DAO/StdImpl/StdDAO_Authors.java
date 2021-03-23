@@ -5,30 +5,44 @@ import models.Authors;
 
 import java.util.List;
 
+import models.Readers;
 import utils.SQL_FuncCall;
 import utils.SessionHelper;
+
+import javax.persistence.TypedQuery;
 
 
 public class StdDAO_Authors extends StdImpl_AuthorDAO implements I_AuthorsDAO {
 
     @Override
     public Authors AddAuthor(String f_name, String s_name, String patr) {
+        if(f_name == null || s_name == null)return null;
         return SessionHelper.InSessionActWithR(ses -> ses.load(Authors.class, SQL_FuncCall.AddAuthor(ses, f_name, s_name, patr)));
     }
 
     @Override
     public Authors GetAuthor(String f_name, String s_name, String patr) {
+        if(f_name == null || s_name == null)return null;
         return GetAuthorById(GetAuthorId(f_name, s_name, patr));
     }
 
     @Override
     public Integer GetAuthorId(String f_name, String s_name, String patr) {
+        if(f_name == null || s_name == null)return null;
         return SessionHelper.InSessionActWithR(ses -> SQL_FuncCall.GetAuthorId(ses, f_name, s_name, patr));
     }
 
     @Override
     public Authors GetAuthorById(Integer id) {
         return SessionHelper.InSessionActWithR(ses -> ses.load(Authors.class, id));
+    }
+
+    @Override
+    public List<Authors> GetAllAuthor() {
+        return  SessionHelper.InSessionActWithR(ses -> {
+                TypedQuery<Authors> q = ses.createQuery("FROM Authors", Authors.class);
+                return q.getResultList();
+        });
     }
 
     @Override

@@ -53,7 +53,10 @@ BEGIN
 	patr = LOWER(patr);
 	IF complete_match THEN
 		FOR r IN
-			SELECT * FROM authors WHERE first_name = f_name AND second_name = s_name AND patronymic = patr
+			SELECT * FROM authors WHERE
+			    ((f_name IS NULL) OR first_name = f_name) AND
+                ((s_name IS NULL) OR second_name = s_name) AND
+			    ((patr IS NULL) OR patronymic = patr)
 		LOOP 
 			RETURN NEXT r;
 		END LOOP;
@@ -112,8 +115,15 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE PROCEDURE add_author_to_book(author_id INT, book_id INT)
-AS $$ BEGIN
-INSERT INTO author_book(author_id, book_id) VALUES (author_id, book_id);
+AS $$ 
+DECLARE 
+	a_id INT;
+	b_id INT;
+BEGIN
+a_id = author_id;
+b_id = book_id;
+IF 0 = (SELECT COUNT(*) FROM author_book ab WHERE ab.book_id = b_id AND ab.author_id = a_id)
+THEN INSERT INTO author_book(author_id, book_id) VALUES (author_id, book_id); END IF;
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_authors_of_book(_book_id INT)
