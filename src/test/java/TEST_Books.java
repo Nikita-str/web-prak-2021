@@ -1,18 +1,14 @@
 
 import DAO.Interfaces.I_AuthorsDAO;
-import DAO.Interfaces.I_BookExHistoryDAO;
 import DAO.Interfaces.I_BooksDAO;
 import DAO.Interfaces.I_PublishersDAO;
 import DAO.StdImpl.StdDAO_Factory;
 import models.Books;
-import models.Publishers;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 import utils.DatabaseHelper;
-
-import java.util.List;
 
 public class TEST_Books {
 

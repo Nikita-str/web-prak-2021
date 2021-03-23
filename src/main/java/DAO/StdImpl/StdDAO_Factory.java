@@ -1,15 +1,14 @@
 package DAO.StdImpl;
 
-import DAO.Interfaces.I_AuthorsDAO;
-import DAO.Interfaces.I_BooksDAO;
-import DAO.Interfaces.I_PublishersDAO;
-import DAO.Interfaces.I_ReadersDAO;
+import DAO.Interfaces.*;
 
 public class StdDAO_Factory {
     private static I_AuthorsDAO DAO_Author = null;
     private static I_PublishersDAO DAO_Publisher = null;
     private static I_ReadersDAO DAO_Reader = null;
     private static I_BooksDAO DAO_Book= null;
+    private static I_BookExDAO DAO_BookExs= null;
+    private static I_BookExHistoryDAO DAO_BEH= null;
 
     private static StdDAO_Factory instance = null;
 
@@ -36,5 +35,15 @@ public class StdDAO_Factory {
     public I_BooksDAO getBookDao(){
         if(DAO_Book == null) DAO_Book = new StdDAO_Books();
         return DAO_Book;
+    }
+
+    public I_BookExDAO getBookExDao(){
+        if(DAO_BookExs == null) DAO_BookExs = new StdDAO_BookEx();
+        return DAO_BookExs;
+    }
+
+    public I_BookExHistoryDAO getBookExHistoryDao(){
+        if(DAO_BEH == null) DAO_BEH = new StdDAO_BookExHistory();
+        return DAO_BEH;
     }
 }

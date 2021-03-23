@@ -1,13 +1,14 @@
 package DAO.StdImpl;
 
 import DAO.Interfaces.I_BookExDAO;
+import DAO.Interfaces.StdImpl_BookExDAO;
 import models.BookExHistory;
 import utils.SQL_FuncCall;
 import utils.SessionHelper;
 
 import java.util.List;
 
-public class StdDAO_BookEx implements I_BookExDAO {
+public class StdDAO_BookEx extends StdImpl_BookExDAO implements I_BookExDAO {
 
     @Override public void BookExDereg(int bk_ex_id, boolean need_to_ret)
     { SessionHelper.InSessionAct(ses -> SQL_FuncCall.BookExDereg(ses, bk_ex_id, need_to_ret)); }
