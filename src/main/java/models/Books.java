@@ -4,6 +4,7 @@ package models;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -33,6 +34,9 @@ public class Books {
 
   @Column(name = "decommissioned")
   private boolean decommissioned;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  private Set<Authors> authors = new HashSet<>();
 
   public Books(){}
   public Books(String title, String about, Publishers pub, Date pub_year, String isbn, boolean decommissioned)
@@ -82,6 +86,8 @@ public class Books {
   public void setIsbn(String isbn) {
     this.isbn = isbn;
   }
+
+  public Set<Authors> getAuthors(){return authors;}
 
   public boolean getDecommissioned() {
     return decommissioned;

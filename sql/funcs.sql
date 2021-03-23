@@ -114,7 +114,8 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE PROCEDURE add_author_to_book(author_id INT, book_id INT)
+CREATE OR REPLACE FUNCTION add_author_to_book(author_id INT, book_id INT)
+RETURNS void
 AS $$ 
 DECLARE 
 	a_id INT;
@@ -153,7 +154,8 @@ END; $$ LANGUAGE plpgsql;
 
 
 --- BOOK EXAMPLE
-CREATE OR REPLACE PROCEDURE add_book_ex(bk_id INT, amount INT)
+CREATE OR REPLACE FUNCTION add_book_ex(bk_id INT, amount INT)
+RETURNS void
 AS $$ BEGIN
 	WHILE (amount > 0) LOOP
 		INSERT INTO book_examples(book_id) VALUES (bk_id);
@@ -180,8 +182,8 @@ BEGIN
 		(LOWER(title), about, publ_id, TO_DATE(pub_year::text, 'YYYY'), ISBN) RETURNING book_id
 	)
 	SELECT * FROM bk INTO ret_book_id;
-	
-	CALL add_book_ex(ret_book_id, amount);	
+
+    PERFORM add_book_ex(ret_book_id, amount);
 END;
 $$
 LANGUAGE plpgsql;
@@ -200,8 +202,8 @@ BEGIN
 		(LOWER(title), about, TO_DATE(pub_year::text, 'YYYY'), ISBN) RETURNING book_id
 	)
 	SELECT * FROM bk INTO ret_book_id;
-	
-	CALL add_book_ex(ret_book_id, amount);
+
+    PERFORM add_book_ex(ret_book_id, amount);
 END;
 $$
 LANGUAGE plpgsql;
@@ -253,7 +255,8 @@ END; $$ LANGUAGE plpgsql;
 --- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 --- BOOK_EX TAKE / RET  -----------------------------------------------------------------------------------------
 
-CREATE OR REPLACE PROCEDURE book_take(bk_ex_id INT, lib_card_id INT, date_issue DATE, schedule_ret_date DATE)
+CREATE OR REPLACE FUNCTION book_take(bk_ex_id INT, lib_card_id INT, date_issue DATE, schedule_ret_date DATE)
+RETURNS void
 AS $$ BEGIN
 	IF book_already_taked(bk_ex_id) THEN
 		RAISE EXCEPTION 'книга уже выдана [book ex. id = %]', bk_ex_id;
@@ -271,17 +274,20 @@ AS $$ BEGIN
 	UPDATE book_examples be SET spare = FALSE WHERE be.book_ex_id = bk_ex_id;		
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE book_take(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
+CREATE OR REPLACE FUNCTION book_take(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
+RETURNS void
 AS $$ BEGIN
-	CALL book_take(bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date);	
+    PERFORM book_take(bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date);
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE book_take(book_ex_id INT, lib_card_id INT, day_for_ret INT)
+CREATE OR REPLACE FUNCTION book_take(book_ex_id INT, lib_card_id INT, day_for_ret INT)
+RETURNS void
 AS $$ BEGIN
-	CALL book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
+    PERFORM book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE book_ret(bk_ex_id INT)
+CREATE OR REPLACE FUNCTION book_ret(bk_ex_id INT)
+RETURNS void
 AS $$ BEGIN
 	IF NOT book_already_taked(bk_ex_id) THEN 
 		RAISE EXCEPTION 'book not taked [book ex. id = %]', bk_ex_id;
@@ -355,7 +361,8 @@ END; $$ LANGUAGE plpgsql;
 
 --- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 --- DEREGISTER -----------------------------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE book_ex_dereg(bk_ex_id INT, need_to_ret BOOL)
+CREATE OR REPLACE FUNCTION book_ex_dereg(bk_ex_id INT, need_to_ret BOOL)
+RETURNS void
 AS $$ BEGIN
 	UPDATE book_examples SET decommissioned = TRUE WHERE book_ex_id = bk_ex_id;
 	IF NOT need_to_ret THEN
@@ -364,7 +371,8 @@ AS $$ BEGIN
 	END IF;
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE book_dereg(_book_id INT, need_to_ret BOOL)
+CREATE OR REPLACE FUNCTION book_dereg(_book_id INT, need_to_ret BOOL)
+RETURNS void
 AS $$ BEGIN
 	UPDATE book SET decommissioned = TRUE WHERE book_id = _book_id;
 	UPDATE book_examples SET decommissioned = TRUE WHERE book_id = _book_id;

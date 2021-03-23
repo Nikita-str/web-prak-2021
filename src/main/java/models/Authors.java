@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,9 @@ public class Authors {
   @Column(name = "patronymic")
   private String patronymic;
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  private Set<Books> books = new HashSet<>();
+
   public Authors() { }
 
   public Authors(String s_name, String f_name, String patr)
@@ -28,8 +32,8 @@ public class Authors {
   }
 
   public Integer getAuthorId() { return authorId; }
-  // public void setAuthorId(long authorId) {this.authorId = authorId;}
 
+  public Set<Books> getBooks(){return books;}
 
   public String getSecondName() {
     return secondName;

@@ -1,3 +1,8 @@
+/*
+SET ROLE prak_user;
+SELECT current_user;
+*/
+
 TRUNCATE readers CASCADE;
 TRUNCATE book_ex_history CASCADE;
 TRUNCATE publishers CASCADE;

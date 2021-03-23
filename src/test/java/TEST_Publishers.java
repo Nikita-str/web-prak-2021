@@ -1,4 +1,4 @@
-import DAO.Interfaces.I_AuthorsDAO;
+
 import DAO.Interfaces.I_PublishersDAO;
 import DAO.StdImpl.StdDAO_Factory;
 import models.Publishers;
@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 import utils.DatabaseHelper;
 
-public class TEST_publishers {
+public class TEST_Publishers {
 
     @BeforeClass
     public void Before() throws Exception {
@@ -31,7 +31,7 @@ public class TEST_publishers {
         Publishers pub_5 =  pub_dao.GetPublisher("######");
 
         Assert.assertEquals(pub_dao.FindPublisher("######", true).get(0).getPId(), pub_5.getPId());
-        
+
         Assert.assertEquals(pub_dao.GetPublisherById(pub_5.getPId()).getPName(), pub_5.getPName());
 
         Assert.assertEquals(pub_dao.GetAllPublishers().size(), 5);
