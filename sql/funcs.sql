@@ -277,7 +277,7 @@ AS $$ BEGIN
     RETURN TRUE;
 END; $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION book_take(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
+CREATE OR REPLACE FUNCTION book_take_with_ret_date(bk_ex_id INT, lib_card_id INT, schedule_ret_date DATE)
 RETURNS BOOL
 AS $$ BEGIN
     RETURN book_take(bk_ex_id, lib_card_id, CAST(NOW() AS DATE), schedule_ret_date);
@@ -286,7 +286,7 @@ END; $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION book_take(book_ex_id INT, lib_card_id INT, day_for_ret INT)
 RETURNS BOOL
 AS $$ BEGIN
-    RETURN book_take(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
+    RETURN book_take_with_ret_date(book_ex_id, lib_card_id, CAST(now() + day_for_ret * interval '1D' AS DATE));
 END; $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION book_ret(bk_ex_id INT)

@@ -48,6 +48,10 @@ public class TEST_Authors{
         Assert.assertEquals(a_dao.FindAuthor("a", true).size(), 0);
 
         Assert.assertEquals(a_dao.GetAllAuthor().size(), len + 4);
+        a_dao.AddAuthor("explicit", "author", "add");//not recommend
+        a_dao.AddAuthor("explicit", "author", "add");//not recommend
+        Assert.assertEquals(a_dao.GetAllAuthor().size(), len + 6);
+
     }
 }
 

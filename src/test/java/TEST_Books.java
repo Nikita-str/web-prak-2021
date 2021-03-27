@@ -30,8 +30,11 @@ public class TEST_Books {
         book_dao.AddAuthorToBook(a_dao.GetAuthor("автор", "безымянный", null), book_1);
         book_dao.AddAuthorToBook(a_dao.GetAuthor("автор", "безымянный", null), book_1);
         book_dao.AddAuthorToBook(a_dao.GetAuthor("автор", "безымянный", null), book_1);
+        factory.getAuthorDao().AddAuthorToBook(a_dao.GetAuthor("автор", "безымянный", null), book_1);
+        factory.getAuthorDao().AddAuthorToBook(a_dao.GetAuthor("333", "333", "333"), book_1);
 
-        Assert.assertEquals(book_dao.GetAuthorOfBook(book_1).size(), 2);
+        Assert.assertEquals(book_dao.GetAuthorOfBook(book_1).size(), 3);
+        Assert.assertEquals(factory.getAuthorDao().GetAuthorOfBook(book_1).size(), 3);
 
         book_dao.AddAuthorToBook(
                 a_dao.GetAuthorId("Станислав", "Лем", "Герман"),
@@ -44,7 +47,9 @@ public class TEST_Books {
                 book_dao.AddBook("Фиаско", "последний роман Станислава Лема", "АСТ", 1986, "978-5-17-069299-6", 4)
         );
 
-        int b_id = book_dao.AddBook("Сумма технологий", "Классика футурологии.", "АСТ", 1964, "978-5-17-100637-2", 2);
+        int b_id = book_dao.AddBook("Сумма технологий", "Классика футурологии.",
+                                    book_dao.BookFind_Title("Возвращение со звезд").get(0).getPublisher().getPId(),
+                            1964, "978-5-17-100637-2", 2);
         book_dao.AddAuthorToBook(a_dao.GetAuthorId("Станислав", "Лем", "Герман"),  b_id);
 
         Assert.assertEquals(book_dao.BookFind_Title("Сумма технологий").get(0).getBookId(), b_id);
@@ -84,5 +89,13 @@ public class TEST_Books {
         book_dao.BookDereg(book_2, false);
         Assert.assertEquals(book_dao.GetBookEx(book_2).size(), 0);
         Assert.assertEquals(book_dao.GetBookEx(book_2, true, false).size(), 10);
+
+        int b_new_id = book_dao.AddBook("not real", "...", 999, null, 5);
+        int amount_not_decom_book = book_dao.BookFind_All().size();
+        Assert.assertEquals(book_dao.BookFind_Year(999).size(), 1);
+        book_dao.BookDereg(b_new_id, false);
+        Assert.assertEquals(book_dao.BookFind_Year(999).size(), 0);
+        Assert.assertEquals(amount_not_decom_book - 1, book_dao.BookFind_All().size());
+
     }
 }

@@ -269,7 +269,7 @@ public class SQL_FuncCall {
 
 
     public static void BookTake(Session session, Integer bk_ex_id, Integer lib_card_id, Date schedule_ret_date) {
-        ProcedureCall query = session.createStoredProcedureCall("book_take");
+        ProcedureCall query = session.createStoredProcedureCall("book_take_with_ret_date");
         query.registerParameter("bk_ex_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("lib_card_id", Integer.class, ParameterMode.IN).enablePassingNulls(true);
         query.registerParameter("schedule_ret_date", Date.class, ParameterMode.IN).enablePassingNulls(true);

@@ -98,8 +98,9 @@ public class StdDAO_Books extends StdImpl_BookDAO implements I_BooksDAO {
         String add_isbn = (isbn == null) ? "" : " AND REPLACE(isbn, '-', '') LIKE (REPLACE('"+ isbn + "', '-', '') || '%')  ";
         String add_pid = (pub_id == null) ? "" : " AND publisher_id = " + pub_id + " ";
         String add_year = (pub_year == null) ? "" : " AND EXTRACT(YEAR FROM pub_year) = " + pub_year + " ";
+        String add_decom = with_decommissioned ? "" : " AND decommissioned = FALSE ";
         return SessionHelper.InSessionActWithR((ses -> {
-            TypedQuery<Books> q = ses.createQuery("FROM Books WHERE (1 = 1)" + add_title + add_isbn + add_pid + add_year, Books.class);
+            TypedQuery<Books> q = ses.createQuery("FROM Books WHERE (1 = 1)" + add_title + add_isbn + add_pid + add_year + add_decom, Books.class);
             return q.getResultList();
         }));
     }

@@ -31,7 +31,7 @@ public class TEST_Readers {
         I_BookExDAO ex_dao = factory.getBookExDao();
         I_ReadersDAO reader_dao = factory.getReaderDao();
 
-        Readers r0 = reader_dao.GetReadersById(reader_dao.AddReaders("name", "surname", null, "adr", "8(16)32-64"));
+        Readers r0 = reader_dao.GetReadersById(reader_dao.AddReaders("name", "surname", "patr", "adr", "8(16)32-64"));
         Readers r1 = reader_dao.GetReadersById(reader_dao.AddReaders("F", "surname", null, null, "5(555)-30-30-0-0-0"));
         Readers r2 = reader_dao.GetReadersById(reader_dao.AddReaders("no me", "surname", null, "adr", "8(16)8-16"));
 
@@ -40,6 +40,7 @@ public class TEST_Readers {
 
         Assert.assertEquals(reader_dao.FindReader_Surname("surname").size(), 3);
         Assert.assertEquals(reader_dao.FindReader("name", "surname").size(), 1);
+        Assert.assertEquals(reader_dao.FindReader("name", "surname", "patr").size(), 1);
 
         Books book = book_dao.GetBookById(book_dao.AddBook("fiction"));
         book_dao.AddBookEx(book, 5);
@@ -79,8 +80,16 @@ public class TEST_Readers {
         Assert.assertEquals(reader_dao.GetReaderOverdueBook(r0, true).size(), 0);
         Assert.assertEquals(reader_dao.GetReaderOverdueBook(r0, false).size(), 1);
 
-        Assert.assertEquals(reader_dao.GetReaderHistory(r0).size(), 3);
-        Assert.assertEquals(factory.getBookExHistoryDao().GetReaderHistory(r0.getLibraryCardId()).size(), 3);
+        Assert.assertTrue(reader_dao.ReaderCanPassLibCard(r0));
+        c.set(2021, 11, 9);
+        Date date_ret = new Date(c.getTime().getTime());
+        reader_dao.BookTake(ex.getBookExId(), r0.getLibraryCardId(), date_ret);
+        Assert.assertFalse(reader_dao.ReaderCanPassLibCard(r0));
+        reader_dao.BookRet(reader_dao.GetReaderCurBook(r0).get(0).getBookEx().getBookExId());
+        Assert.assertTrue(reader_dao.ReaderCanPassLibCard(r0));
+
+        Assert.assertEquals(reader_dao.GetReaderHistory(r0).size(), 4);
+        Assert.assertEquals(factory.getBookExHistoryDao().GetReaderHistory(r0.getLibraryCardId()).size(), 4);
         Assert.assertEquals(reader_dao.GetReaderHistory(r1).size(), 0);
         Assert.assertNotEquals(factory.getBookExHistoryDao().GetExBookHistory(ex.getBookExId()).size(), 0);
     }

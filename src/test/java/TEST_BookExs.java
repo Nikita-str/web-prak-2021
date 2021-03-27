@@ -51,5 +51,7 @@ public class TEST_BookExs {
         ex_dao.BookExDereg(ex_0.getBookExId(), false);
         Assert.assertTrue(ex_dao.BookIsDereg(ex_0));
         Assert.assertEquals(ok_books_amount - 1, book_dao.GetBookEx(book, false, true).size());
+        book_dao.AddBookEx(book, 2);
+        Assert.assertEquals(ok_books_amount + 1, book_dao.GetBookEx(book, false, true).size());
     }
 }
