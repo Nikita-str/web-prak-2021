@@ -36,11 +36,9 @@ public class BookExamples {
   public Books getBook() {
     return book;
   }
-
   public boolean getSpare() {
     return spare;
   }
-
   public boolean getDecommissioned() {
     return decommissioned;
   }

@@ -41,36 +41,17 @@ public class BookExHistory {
   public BookExamples getBookEx() {
     return bookEx;
   }
-  public void setBookEx(BookExamples bookEx) {
-    this.bookEx = bookEx;
-  }
-
   public Readers getReader() {
     return reader;
   }
-  public void setReader(Readers reader) {
-    this.reader = reader;
-  }
-
   public Date getDateOfIssue() {
     return dateOfIssue;
   }
-  public void setDateOfIssue(java.sql.Date dateOfIssue) {
-    this.dateOfIssue = dateOfIssue;
-  }
-
   public Date getSheduleRetDate() {
     return sheduleRetDate;
   }
-  public void setSheduleRetDate(Date sheduleRetDate) {
-    this.sheduleRetDate = sheduleRetDate;
-  }
-
   public Date getRealRetDate() {
     return realRetDate;
-  }
-  public void setRealRetDate(Date realRetDate) {
-    this.realRetDate = realRetDate;
   }
 
   @Override

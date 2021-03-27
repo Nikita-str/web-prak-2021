@@ -49,46 +49,24 @@ public class Books {
   public int getBookId() {
     return bookId;
   }
-  //public void setBookId(long bookId) { this.bookId = bookId; }
 
   public String getTitle() {
     return title;
   }
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
   public String getAbout() {
     return about;
   }
-  public void setAbout(String about) {
-    this.about = about;
-  }
-
   public Publishers getPublisher() {
     return publisher;
   }
-  public void setPublisher(Publishers publisher) { this.publisher = publisher; }
-
   public java.sql.Date getPubYear() {
     return pubYear;
   }
-  public void setPubYear(java.sql.Date pubYear) {
-    this.pubYear = pubYear;
-  }
-
   public String getIsbn() {
     return isbn;
   }
-  public void setIsbn(String isbn) {
-    this.isbn = isbn;
-  }
-
   public boolean getDecommissioned() {
     return decommissioned;
-  }
-  public void setDecommissioned(boolean decommissioned) {
-    this.decommissioned = decommissioned;
   }
 
   @Override

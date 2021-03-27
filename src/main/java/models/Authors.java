@@ -33,24 +33,11 @@ public class Authors {
   public String getSecondName() {
     return secondName;
   }
-  public void setSecondName(String secondName) {
-    this.secondName = secondName;
-  }
-
-
   public String getFirstName() {
     return firstName;
   }
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-
   public String getPatronymic() {
     return patronymic;
-  }
-  public void setPatronymic(String patronymic) {
-    this.patronymic = patronymic;
   }
 
   @Override

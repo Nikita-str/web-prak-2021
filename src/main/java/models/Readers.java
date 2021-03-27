@@ -30,34 +30,18 @@ public class Readers {
   public String getSecondName() {
     return secondName;
   }
-  public void setSecondName(String secondName) {this.secondName = secondName;}
-
   public String getFirstName() {
     return firstName;
   }
-  public void setFirstName(String firstName) {this.firstName = firstName;}
-
   public String getPatronymic() {
     return patronymic;
   }
-  public void setPatronymic(String patronymic) {
-    this.patronymic = patronymic;
-  }
-
   public String getAddress() {
     return address;
   }
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
   public String getPhoneNumber() {
     return phoneNumber;
   }
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
   public boolean getLibCardPassed() {
     return libCardPassed;
   }
