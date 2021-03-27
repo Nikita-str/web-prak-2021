@@ -66,14 +66,21 @@ public class TEST_Readers {
         Date d_is = new Date(c.getTime().getTime());
         c.set(2021, 2, 8);
         Date d_ret = new Date(c.getTime().getTime());
+
+        int ex_history_len = factory.getBookExHistoryDao().GetExBookHistory(ex.getBookExId()).size();
         reader_dao.BookTake(ex.getBookExId(), r0.getLibraryCardId(), d_is, d_ret);
+        Assert.assertEquals(factory.getBookExHistoryDao().GetExBookHistory(ex.getBookExId()).size(), ex_history_len + 1);
+        ex_history_len += 1;
 
         Assert.assertEquals(reader_dao.GetReaderOverdueBook(r0, true).size(), 1);
         reader_dao.BookRet(ex.getBookExId());
+        Assert.assertEquals(factory.getBookExHistoryDao().GetExBookHistory(ex.getBookExId()).size(), ex_history_len);
+
         Assert.assertEquals(reader_dao.GetReaderOverdueBook(r0, true).size(), 0);
         Assert.assertEquals(reader_dao.GetReaderOverdueBook(r0, false).size(), 1);
 
         Assert.assertEquals(reader_dao.GetReaderHistory(r0).size(), 3);
+        Assert.assertEquals(factory.getBookExHistoryDao().GetReaderHistory(r0.getLibraryCardId()).size(), 3);
         Assert.assertEquals(reader_dao.GetReaderHistory(r1).size(), 0);
         Assert.assertNotEquals(factory.getBookExHistoryDao().GetExBookHistory(ex.getBookExId()).size(), 0);
     }
