@@ -9,8 +9,8 @@
     <body>
         <div class="left-block">
             <div class="lb-but" id="page-name">главная страница</div>
-            <button class="lb-but" onclick="location.href='/jWeb/readers.jsp'">читатели</button>
-            <button class="lb-but" onclick="location.href='/jWeb/books.jsp'">книги</button>
+            <a href="readers"><button class="lb-but">читатели</button></a>
+            <a href="books"><button class="lb-but">книги</button></a>
         </div>
         <% HibernateSessionFactoryUtil.getSessionFactory(); %>
     </body>
