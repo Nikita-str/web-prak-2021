@@ -13,10 +13,6 @@ import java.util.List;
 @Controller
 public class CtrlReaders {
 
-    @GetMapping("/hello")
-    @ResponseBody
-    public String hello() { return "Hello, creature!"; }
-
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String Index() {
         return "index";
@@ -27,4 +23,5 @@ public class CtrlReaders {
         return "readers";
     }
 
+    
 }

@@ -69,6 +69,8 @@ button.lb-but:hover{
     left: 10%;
     width: calc(100% - (2*10%));
     height: 70%;
+    min-height: 270px;
+    min-width: 400px;
     background-color:  var(--gray-d);
 }
 /*
@@ -102,6 +104,30 @@ button.lb-but:hover{
 }
 .ok:hover{background-color: var(--gray-d6);}
 
+.inp-handler{
+    position: relative;
+    left: 5%;
+    top: 5%;
+    color: var(--gray-d6);
+    font-size: calc(0.6vw + 8px);
+}
+
+.inp-handler > div{
+    width: 90%;
+    margin-bottom: 4px;
+}
+
+.inp-handler > div > label{
+    position: relative;
+    display: inline-block;
+    width: max(16%, 30px);
+    text-align: right;
+}
+
+.inp-not-empty::after{
+    color:darkred;
+    content: "*";
+}
 
 .center-it{
     background-color: transparent;

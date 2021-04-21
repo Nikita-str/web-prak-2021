@@ -29,6 +29,30 @@
 
         <div class="right-block">
             <div id="add-reader-box">
+                <div class="inp-handler">
+                    <div>
+                        <label class="inp-not-empty">имя </label>
+                        <input type="text" size="25">
+                    </div>
+                    <div>
+                        <label class="inp-not-empty">фамилия </label>
+                        <input type="text" size="25">
+                    </div>
+                    <div>
+                        <label>отчество </label>
+                        <input type="text" size="25">
+                    </div>
+                    <br>
+                    <div>
+                        <label>адрес </label>
+                        <input type="text" size="25">
+                    </div>
+                    <div>
+                        <label>телефон </label>
+                        <input type="text" size="25">
+                    </div>
+                </div>
+
                 <div class="cancel bot-but"><div class="center-it">отмена</div></div>
                 <div class="ok bot-but"><div class="center-it">подтвердить</div></div>
             </div>
