@@ -1,6 +1,7 @@
 package utils;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -12,9 +13,13 @@ public class HibernateSessionFactoryUtil {
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
-            final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+            StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
             try {
-                sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+                System.out.println(registry);
+                MetadataSources mdata_s = new MetadataSources(registry);
+                System.out.println(mdata_s);
+                Metadata mdata = mdata_s.buildMetadata();
+                sessionFactory = mdata.buildSessionFactory();
             } catch (Exception ex) {
                 StandardServiceRegistryBuilder.destroy(registry);
                 System.err.println(ex);

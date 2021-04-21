@@ -1,3 +1,4 @@
+import DAO.Interfaces.I_ReadersDAO;
 import DAO.StdImpl.StdDAO_Factory;
 import models.*;
 import org.hibernate.Session;
@@ -11,11 +12,21 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import Web.BootApp;
+
 public class Main {
     public static void main(String args[]) throws SQLException {
+        BootApp.main(args);
         //DatabaseHelper.DataBaseClear();
         //DatabaseHelper.DataBaseStdInit();
 
+        /*
+        StdDAO_Factory factory = StdDAO_Factory.getInstance();
+        I_ReadersDAO reader_dao = factory.getReaderDao();
+        System.out.println(reader_dao.FindReader_Surname("sur").size());
+        */
+
+        /*
         System.out.println("AUTHORS:");
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
         System.out.println(StdDAO_Factory.getInstance().getAuthorDao().GetAuthor("Братья", "Стругацкие", null));
@@ -86,5 +97,6 @@ public class Main {
         list_rs.forEach(System.out::println);
 
         return;
+         */
     }
 }

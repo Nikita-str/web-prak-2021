@@ -12,6 +12,10 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
+/target/
+/out/
+/.gradle/
+
 
 /helper/*/bin/*
 /helper/*/obj/*

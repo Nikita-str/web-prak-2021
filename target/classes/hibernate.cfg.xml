@@ -24,5 +24,7 @@
         <!--mapping class="models.AuthorBook" /-->
         <mapping class="models.BookExamples" />
         <mapping class="models.BookExHistory" />
+
+
     </session-factory>
 </hibernate-configuration>
