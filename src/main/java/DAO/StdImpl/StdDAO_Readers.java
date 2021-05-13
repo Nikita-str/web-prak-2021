@@ -71,10 +71,21 @@ public class StdDAO_Readers extends StdImpl_ReaderDAO implements I_ReadersDAO {
     }
 
     @Override public List<Readers> FindReader(String first_name, String second_name, String patr) {
-        if(patr == null)return FindReader(first_name, second_name);
+        //if(patr == null)return FindReader(first_name, second_name);
+        boolean all_null = (second_name == null || second_name.length() == 0) &&
+                            (first_name == null || first_name.length() == 0) &&
+                            (patr == null || patr.length() == 0);
+        String sname_s = (second_name == null || second_name.length() == 0) ? "" : (" second_name = '" + second_name + "'");
+        String fname_s = (first_name == null || first_name.length() == 0) ? "" : (" first_name = '" + first_name + "'");
+        if(fname_s.length() > 0 && sname_s.length() > 0)fname_s = " AND " + fname_s;
+        String pat_s = (patr == null || patr.length() == 0) ? "" : (" patronymic = '" + patr + "'");
+        if(pat_s.length() > 0 && (sname_s.length() > 0 || fname_s.length() > 0))pat_s = " AND " + pat_s;
+        String add_s = sname_s + " "+ fname_s +" "+ pat_s;
+        System.out.println(add_s);
         return SessionHelper.InSessionActWithR((ses -> {
-            TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE second_name = '" + second_name +
-                    "' AND  first_name = '" + first_name + "' AND  patronymic = '" + patr + "'", Readers.class);
+            TypedQuery<Readers> q = ses.createQuery(all_null ? "FROM Readers WHERE (1 = 1)" : ("FROM Readers WHERE " + add_s), Readers.class);
+            //TypedQuery<Readers> q = ses.createQuery("FROM Readers WHERE second_name = '" + second_name +
+            //        "' AND  first_name = '" + first_name + "' AND  patronymic = '" + patr + "'", Readers.class);
             return q.getResultList();
         }));
     }

@@ -2,11 +2,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>библиотека</title>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+    <jsp:include page="div/Head.jsp"/>
     <body>
+        <jsp:include page="div/Await.jsp"/>
         <div class="left-block">
             <div class="lb-but" id="page-name">главная страница</div>
             <a href="readers"><button class="lb-but">читатели</button></a>

@@ -5,16 +5,14 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>библиотека</title>
-        <link rel="stylesheet" href="css/style.css">
-        <script src="js/show_by_id.js"></script>
-    </head>
+    <jsp:include page="div/Head.jsp"/>
     <body>
         <div class="left-block">
             <div class="lb-but" id="page-name">читатели</div>
             <button class="lb-but" onclick="ShowById('add-reader-box')">добавить читателя</button>
-            <a href="TODO"><button class="lb-but">найти читателя</button></a>
+            <!--a href="TODO"-->
+            <button class="lb-but"  onclick="ShowById('search-reader-box')">найти читателя</button>
+            <!--/a-->
             <a href="index">
                 <button class="lb-but">
                     <%
@@ -28,34 +26,8 @@
         </div>
 
         <div class="right-block">
-            <div id="add-reader-box">
-                <div class="inp-handler">
-                    <div>
-                        <label class="inp-not-empty">имя </label>
-                        <input type="text" size="25">
-                    </div>
-                    <div>
-                        <label class="inp-not-empty">фамилия </label>
-                        <input type="text" size="25">
-                    </div>
-                    <div>
-                        <label>отчество </label>
-                        <input type="text" size="25">
-                    </div>
-                    <br>
-                    <div>
-                        <label>адрес </label>
-                        <input type="text" size="25">
-                    </div>
-                    <div>
-                        <label>телефон </label>
-                        <input type="text" size="25">
-                    </div>
-                </div>
-
-                <div class="cancel bot-but"><div class="center-it">отмена</div></div>
-                <div class="ok bot-but"><div class="center-it">подтвердить</div></div>
-            </div>
+            <jsp:include page="div/AddReader.jsp"/>
+            <jsp:include page="div/SearchReader.jsp"/>
         </div>
 
     </body>
