@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-    <form id="add-reader-box" name="form_add_reader" method="post" action="add_reader" style="display: none;">
+    <form id="add-reader-box"  class="hide-layer-weird" method="post" action="add_reader" style="display: none;">
         <div class="inp-handler">
             <div>
                 <label class="inp-not-empty">имя </label>

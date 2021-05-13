@@ -1,9 +1,8 @@
 package Web;
 
-import DAO.Interfaces.I_BookExDAO;
-import DAO.Interfaces.I_BooksDAO;
-import DAO.Interfaces.I_ReadersDAO;
+import DAO.Interfaces.*;
 import DAO.StdImpl.StdDAO_Factory;
+import models.Books;
 import models.Readers;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +47,34 @@ public class CtrlReaders {
         return "reader";
     }
 
+    @RequestMapping(value = "/books", method = RequestMethod.GET)
+    public String Books() {
+        return "books";
+    }
+
+    @RequestMapping(value = "/book", method = RequestMethod.GET)
+    public String Book(@RequestParam(name="id") String b_id, ModelMap map)
+    {
+        int id = Integer.parseInt(b_id);
+        I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
+        Books book = book_dao.GetBookById(id);
+        map.addAttribute("id", id);
+        map.addAttribute("book", book);
+
+        if(book.getPubYear() == null)
+            map.addAttribute("pub_year", "неизвестен");
+        else {
+            Calendar c = Calendar.getInstance();
+            c.setTime(book.getPubYear());
+            int year = c.get(Calendar.YEAR);
+            map.addAttribute("pub_year", year);
+        }
+        map.addAttribute("book_pub", book.getPublisher()==null?"---":book.getPublisher().getPName());
+        map.addAttribute("auths", book_dao.GetAuthorOfBook(book));
+        return "book";
+    }
+
+
     @RequestMapping(value = "/add_reader", method = RequestMethod.POST)
     public String AddReader(@RequestParam(name="add_name") String name,
                             @RequestParam(name="add_snake") String snake,
@@ -62,6 +90,43 @@ public class CtrlReaders {
         int id = reader_dao.AddReaders(name, snake, pat, addr, phone);
         map.addAttribute("id", id);
         return "redirect:reader";
+    }
+
+    @RequestMapping(value = "/add_auth", method = RequestMethod.POST)
+    public String AddAuth(@RequestParam(name="add_name") String name,
+                            @RequestParam(name="add_snake") String snake,
+                            @RequestParam(name="add_pat") String pat,
+                          @RequestParam(name="book_id") String b_id,
+                            ModelMap map)
+    {
+        I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
+        I_AuthorsDAO a_dao = StdDAO_Factory.getInstance().getAuthorDao();
+        if(pat!=null && pat.length()==0)pat=null;
+        int id = Integer.parseInt(b_id);
+        book_dao.AddAuthorToBook(a_dao.GetAuthorId(name, snake, pat), id);
+        map.addAttribute("id", id);
+        return "redirect:book";
+    }
+
+    @RequestMapping(value = "/add_book", method = RequestMethod.POST)
+    public String AddBook(@RequestParam(name="add_title") String title,
+                            @RequestParam(name="add_about") String about,
+                            @RequestParam(name="add_pub") String pub,
+                            @RequestParam(name="add_year") String year,
+                            @RequestParam(name="add_ISBN") String ISBN,
+                          @RequestParam(name="amount") String amount,
+                            ModelMap map)
+    {
+        I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
+        if(title!=null && title.length()==0)title=null;
+        if(about!=null && about.length()==0)about=null;
+        if(pub!=null && pub.length()==0)pub=null;
+        if(year!=null && year.length()==0)year=null;
+        if(ISBN!=null && ISBN.length()==0)ISBN=null;
+        if(amount!=null && amount.length()==0)amount=null;
+        int id = book_dao.AddBook(title, about, pub, year == null ? null : Integer.parseInt(year), ISBN, amount == null ? 0 : Integer.parseInt(amount));
+        map.addAttribute("id", id);
+        return "redirect:book";
     }
 
     @RequestMapping(value = "/find_reader", method = RequestMethod.GET)

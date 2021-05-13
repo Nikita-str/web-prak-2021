@@ -129,7 +129,27 @@ button.lb-but:hover{
     min-width: 92px;
     background-color: var(--gray-d8);
 }
-.ok:hover{background-color: var(--gray-d6);}
+.mini-ok:hover, .ok:hover{background-color: var(--gray-d6);}
+
+.mini-ok{
+    display:inline-block;
+    position: relative;
+    border: none;
+    border-radius: 3ch;
+    height: 3vh;
+    min-height: 24px;
+    width: 3vh;
+    min-width: 24px;
+    background-color: var(--gray-d8);
+    font-size: calc(0.6vw + 8px);
+    color: var(--gray-d);
+}
+
+.tab-1{
+    display:inline-block;
+    position:relative;
+    min-width: 6vw;
+}
 
 .info-header, .inp-handler{
     position: relative;
@@ -153,6 +173,12 @@ button.lb-but:hover{
     position: relative;
     display: inline-block;
     width: max(16%, 30px);
+    text-align: right;
+}
+.inp-handler.long > div > label{
+    position: relative;
+    display: inline-block;
+    width: max(26%, 50px);
     text-align: right;
 }
 

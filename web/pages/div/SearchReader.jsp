@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-    <form id="search-reader-box" method="get" action="find_reader" style="display: none;">
+    <form id="search-reader-box" class="hide-layer-weird" method="get" action="find_reader" style="display: none;">
         <div class="inp-handler">
             <div>
                 <label>имя </label>
