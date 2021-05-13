@@ -114,6 +114,11 @@ button.lb-but:hover{
     font-size: calc(0.6vw + 8px);
 }
 
+.bad-info{
+    color: var(--cancel-on);
+}
+
+
 .cancel{
     width: 15%;
     left: 5%;

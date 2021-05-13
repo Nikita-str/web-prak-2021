@@ -2,6 +2,7 @@ package Web;
 
 import DAO.Interfaces.*;
 import DAO.StdImpl.StdDAO_Factory;
+import models.BookExamples;
 import models.Books;
 import models.Readers;
 import org.springframework.ui.ModelMap;
@@ -71,6 +72,8 @@ public class CtrlReaders {
         }
         map.addAttribute("book_pub", book.getPublisher()==null?"---":book.getPublisher().getPName());
         map.addAttribute("auths", book_dao.GetAuthorOfBook(book));
+        map.addAttribute("can_take", (book_dao.GetBookEx(id, true, true).size()>0));
+
         return "book";
     }
 
@@ -157,9 +160,64 @@ public class CtrlReaders {
         return "found_reader";
     }
 
+
+    @RequestMapping(value = "/find_book", method = RequestMethod.GET)
+    public String FindBook(@RequestParam(name="find_title", required = false) String title,
+                             @RequestParam(name="find_pub", required = false) String pub,
+                             @RequestParam(name="find_year", required = false) String year,
+                             @RequestParam(name="find_ISBN", required = false) String ISBN,
+                             ModelMap map)
+    {
+        I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
+        I_PublishersDAO p_dao = StdDAO_Factory.getInstance().getPublisherDao();
+        if(title != null && title.length()==0)title=null;
+        if(pub != null && pub.length()==0)pub=null;
+        if(year != null && year.length()==0)year=null;
+        if(ISBN != null && ISBN.length()==0)ISBN=null;
+        List<Books> bs = book_dao.BookFind(title, pub==null?null:p_dao.GetPublisherId(pub),year==null?null:Integer.parseInt(year), ISBN, false);
+        map.addAttribute("bs", bs);
+        return "found_book";
+    }
+
     @RequestMapping(value = "/found_reader", method = RequestMethod.GET)
     public String FoundReader(ModelMap map){ return "found_reader"; }
 
+    @RequestMapping(value = "/book_ex", method = RequestMethod.GET)
+    public String BookEx(@RequestParam(name="ex_id") String str_ex_id, ModelMap map)
+    {
+        I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
+        int ex_id = Integer.parseInt(str_ex_id);
+        BookExamples ex = ex_dao.GetBookExById(ex_id);
+        map.addAttribute("ex_id", ex_id);
+        map.addAttribute("title", ex.getBook().getTitle());
+        map.addAttribute("book_id", ex.getBook().getBookId());
+        map.addAttribute("can_take", ex.getSpare());
+        map.addAttribute("dereg", ex.getDecommissioned());
+        return "book_ex";
+    }
+
+    @RequestMapping(value = "/book_ret", method = RequestMethod.GET)
+    public String BookRet(@RequestParam(name="ex_id") String str_ex_id, ModelMap map)
+    {
+        I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
+        I_ReadersDAO r_dao = StdDAO_Factory.getInstance().getReaderDao();
+        int ex_id = Integer.parseInt(str_ex_id);
+        BookExamples ex = ex_dao.GetBookExById(ex_id);
+        r_dao.BookRet(ex.getBookExId());
+        map.addAttribute("id", ex.getBook().getBookId());
+        return "redirect:book";
+    }
+
+    @RequestMapping(value = "/book_lost", method = RequestMethod.GET)
+    public String BookLost(@RequestParam(name="ex_id") String str_ex_id, ModelMap map)
+    {
+        I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
+        int ex_id = Integer.parseInt(str_ex_id);
+        BookExamples ex = ex_dao.GetBookExById(ex_id);
+        ex_dao.BookExDereg(ex_id, false);
+        map.addAttribute("id", ex.getBook().getBookId());
+        return "redirect:book";
+    }
 
     @GetMapping("/showMsgX2")
     public String passParametersWithModelMap(@RequestParam(name="msg") String msg, ModelMap map) {

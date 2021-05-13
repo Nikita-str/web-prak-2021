@@ -7,6 +7,7 @@ import models.Readers;
 import java.util.List;
 
 public interface I_BookExDAO {
+    public BookExamples GetBookExById(int bk_ex_id);
     public void BookExDereg(int bk_ex_id, boolean need_to_ret);
 
     public List<BookExHistory> GetExBookHistory(BookExamples ex);

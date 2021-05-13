@@ -12,7 +12,7 @@
         </div>
         <div>
             <label>год публикации </label>
-            <input name="find_year" type="date">
+            <input name="find_year" type="text" size="25">
         </div>
         <div>
             <label>ISBN </label>

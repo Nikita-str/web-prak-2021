@@ -6,7 +6,8 @@
     <jsp:include page="div/Await.jsp"/>
     <div class="left-block">
         <div class="lb-but" id="page-name">книга</div>
-        <button class="lb-but">взять книгу</button>
+        <button class="lb-but">к экземплярам</button>
+        <c:if test="${can_take}"><button class="lb-but">взять книгу</button></c:if>
         <a href="books"><button class="lb-but back">к книгам</button></a>
         <a href="index"><button class="lb-but to-index">на главную</button></a>
     </div>
@@ -53,8 +54,8 @@
                         </div>
                     </div>
                 </form>
-                <label>TODO:кол-во книг</label>
-                <label>TODO:к книгам</label>
+                <br>
+                <c:if test="${!can_take}"><label class="bad-info">нет в наличии</label></c:if>
             </div>
         </div>
     </div>

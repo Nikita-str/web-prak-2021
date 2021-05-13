@@ -3,12 +3,24 @@ package DAO.StdImpl;
 import DAO.Interfaces.I_BookExDAO;
 import DAO.Interfaces.StdImpl_BookExDAO;
 import models.BookExHistory;
+import models.BookExamples;
+import models.Readers;
 import utils.SQL_FuncCall;
 import utils.SessionHelper;
 
+import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StdDAO_BookEx extends StdImpl_BookExDAO implements I_BookExDAO {
+
+    @Override
+    public BookExamples GetBookExById(int bk_ex_id) {
+        return SessionHelper.InSessionActWithR((ses -> {
+            TypedQuery<BookExamples> q = ses.createQuery("FROM BookExamples WHERE book_ex_id = '"+bk_ex_id+"'", BookExamples.class);
+            return q.getSingleResult();
+        }));
+    }
 
     @Override public void BookExDereg(int bk_ex_id, boolean need_to_ret)
     { SessionHelper.InSessionAct(ses -> SQL_FuncCall.BookExDereg(ses, bk_ex_id, need_to_ret)); }
