@@ -23,5 +23,5 @@
         </div>
         <c:if test="${not_book==false}"><input name="from_take_ex_id" type="hidden" value="${book_ex_id}"></c:if>
         <div class="cancel bot-but" onclick="ShowById('search-reader-box')"><div class="center-it">отмена</div></div>
-        <button type="submit" class="ok bot-but"><div class="center-it">подтвердить</div></button>
+        <button type="submit" class="ok bot-but" onclick="ShowById('await')"><div class="center-it">подтвердить</div></button>
     </form>

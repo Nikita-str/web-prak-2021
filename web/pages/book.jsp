@@ -56,6 +56,17 @@
                 </form>
                 <br>
                 <c:if test="${!can_take}"><label class="bad-info">нет в наличии</label></c:if>
+                <br>
+                <label>добавить книги</label>
+                <form method="post" action="add_exs_to_book">
+                    <label>количество:</label>
+                    <input name="amount" type="text" size="25">
+                    <input name="b_id" type="hidden" value="${id}">
+                    <div>
+                        <span class="tab-1"></span>
+                        <button type="submit" class="mini-ok">+</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

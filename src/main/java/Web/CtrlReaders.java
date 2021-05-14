@@ -148,7 +148,7 @@ public class CtrlReaders {
         if(snake != null && snake.length()==0)snake=null;
         if(pat != null && pat.length()==0)pat=null;
         if(phone != null && phone.length()==0)phone=null;
-        if(phone != null && str_from_take_ex_id.length()==0)str_from_take_ex_id=null;
+        if(str_from_take_ex_id != null && str_from_take_ex_id.length()==0)str_from_take_ex_id=null;
 
         System.out.println(name);
 
@@ -201,13 +201,13 @@ public class CtrlReaders {
         int id = Integer.parseInt(book_id);
         Books book = book_dao.GetBookById(id);
         ArrayList<ArrayList<Object>> exs = new ArrayList<>();
-        List<BookExamples> real_exs = book_dao.GetBookEx(id);
+        List<BookExamples> real_exs = book_dao.GetBookEx(id, false, false);
         real_exs.forEach(ex -> {
             ArrayList<Object> temp = new ArrayList<>();
             temp.add(ex.getBookExId());
             AtomicInteger temp_str = new AtomicInteger(-1);
-            if(!ex.getDecommissioned() && ex.getSpare()){
-                ex_dao.GetExBookHistory(ex).forEach(not_ret -> {if(not_ret.getRealRetDate()==null){ temp_str.set(ex.getBookExId());}});
+            if(!ex.getDecommissioned() && !ex.getSpare()){
+                ex_dao.GetExBookHistory(ex).forEach(not_ret -> {if(not_ret.getRealRetDate()==null){ temp_str.set(not_ret.getReader().getLibraryCardId());}});
             }
             temp.add(ex.getDecommissioned() ? "снята с учета" : (ex.getSpare() ? "в наличии" : ("выдана: #" + temp_str.get())));
             exs.add(temp);
@@ -244,7 +244,7 @@ public class CtrlReaders {
         r_dao.BookRet(ex.getBookExId());
         if(str_to_r_id!=null && str_to_r_id.length()>0){
             map.addAttribute("id", Integer.parseInt(str_to_r_id));
-            return "reader";
+            return "redirect:reader";
         }
         map.addAttribute("id", ex.getBook().getBookId());
         return "redirect:book";
@@ -341,6 +341,17 @@ public class CtrlReaders {
         java.sql.Date data_sh_ret_1 = java.sql.Date.valueOf(str_date_sh_ret);
         r_dao.BookTake(b_ex_id, r_id, data_sh_ret_1);
         return "redirect:success";
+    }
+
+
+    @RequestMapping(value = "/add_exs_to_book", method = RequestMethod.POST)
+    public String AddExsToBook(@RequestParam(name="b_id") String s_b_id, @RequestParam(name="amount") String s_amount, ModelMap map)
+    {
+        int b_id = Integer.parseInt(s_b_id);
+        int amount = Integer.parseInt(s_amount);
+        StdDAO_Factory.getInstance().getBookDao().AddBookEx(b_id, amount);
+        map.addAttribute("id", b_id);
+        return "redirect:book";
     }
 
     @GetMapping("/success") public String Success(ModelMap map) { return "success"; }
