@@ -30,7 +30,15 @@
                 <c:forEach items="${bs}" var="b">
                     <tr>
                         <td><span>${b.getTitle()}</span></td>
-                        <td><a href="book?id=${b.getBookId()}">OK</a></td>
+                        <c:choose>
+                            <c:when test="${from_take_rid>-1 && b.ExistSpare()==false}">
+                                <td>нету свободных экземпляров</td>
+                            </c:when>
+                            <c:when test="${from_take_rid>-1}">
+                                <td><a href="book_take?ex_id=${b.GetFirstSpare()}&r_id=${from_take_rid}">OK</a></td>
+                            </c:when>
+                            <c:otherwise><td><a href="book?id=${b.getBookId()}">OK</a></td></c:otherwise>
+                        </c:choose>
                     </tr>
                 </c:forEach>
             </c:otherwise>

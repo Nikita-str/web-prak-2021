@@ -1,6 +1,8 @@
 package models;
 
 
+import DAO.StdImpl.StdDAO_Factory;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Calendar;
@@ -69,6 +71,13 @@ public class Books {
     return decommissioned;
   }
 
+  public boolean ExistSpare() {
+    return StdDAO_Factory.getInstance().getBookDao().GetBookEx(this, true, true).size()>0;
+  }
+
+  public int GetFirstSpare() {
+    return StdDAO_Factory.getInstance().getBookDao().GetBookEx(this, true, true).get(0).getBookExId();
+  }
   @Override
   public String toString(){
     Calendar c = Calendar.getInstance();

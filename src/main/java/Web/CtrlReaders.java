@@ -2,6 +2,7 @@ package Web;
 
 import DAO.Interfaces.*;
 import DAO.StdImpl.StdDAO_Factory;
+import models.BookExHistory;
 import models.BookExamples;
 import models.Books;
 import models.Readers;
@@ -42,6 +43,11 @@ public class CtrlReaders {
         map.addAttribute("patr", StrOr(r.getPatronymic()));
         map.addAttribute("addr", StrOr(r.getAddress()));
         map.addAttribute("p_number", StrOr(r.getPhoneNumber()));
+        map.addAttribute("taked_book_all", reader_dao.GetReaderHistory(r).size());
+        map.addAttribute("taked_book_now", reader_dao.GetReaderCurBook(r).size());
+        map.addAttribute("overdue_all", reader_dao.GetReaderOverdueBook(r, false).size());
+        map.addAttribute("overdue_now", reader_dao.GetReaderOverdueBook(r, true).size());
+        map.addAttribute("cur_bs", reader_dao.GetReaderCurBook(r));
         return "reader";
     }
 
@@ -177,6 +183,8 @@ public class CtrlReaders {
         if(ISBN != null && ISBN.length()==0)ISBN=null;
         List<Books> bs = book_dao.BookFind(title, pub==null?null:p_dao.GetPublisherId(pub),year==null?null:Integer.parseInt(year), ISBN, false);
         map.addAttribute("bs", bs);
+        //Books b;
+        //book_dao.GetBookEx(b, true, true).get(0).getBookExId();
         if(str_from_take_rid != null) map.addAttribute("from_take_rid", Integer.parseInt(str_from_take_rid));
         return "found_book";
     }
@@ -227,13 +235,17 @@ public class CtrlReaders {
     }
 
     @RequestMapping(value = "/book_ret", method = RequestMethod.GET)
-    public String BookRet(@RequestParam(name="ex_id") String str_ex_id, ModelMap map)
+    public String BookRet(@RequestParam(name="ex_id") String str_ex_id, @RequestParam(name="to_r_id", required = false) String str_to_r_id, ModelMap map)
     {
         I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
         I_ReadersDAO r_dao = StdDAO_Factory.getInstance().getReaderDao();
         int ex_id = Integer.parseInt(str_ex_id);
         BookExamples ex = ex_dao.GetBookExById(ex_id);
         r_dao.BookRet(ex.getBookExId());
+        if(str_to_r_id!=null && str_to_r_id.length()>0){
+            map.addAttribute("id", Integer.parseInt(str_to_r_id));
+            return "reader";
+        }
         map.addAttribute("id", ex.getBook().getBookId());
         return "redirect:book";
     }
@@ -282,6 +294,53 @@ public class CtrlReaders {
         }
         map.addAttribute("can_take", can_take);
         return "book_take";
+    }
+
+
+    @RequestMapping(value = "/book_take_any", method = RequestMethod.GET)
+    public String BookTakeAny(@RequestParam(name="b_id") String str_b_id, ModelMap map)
+    {
+        I_BooksDAO b_dao = StdDAO_Factory.getInstance().getBookDao();
+        int b_id = Integer.parseInt(str_b_id);
+        Books book = b_dao.GetBookById(b_id);
+        List<BookExamples> exs = b_dao.GetBookEx(book, true, true);
+        if(exs.size() == 0){
+            map.addAttribute("id", b_id);
+            return "redirect:book";
+        }
+        map.addAttribute("ex_id", exs.get(0).getBookExId());
+        return "redirect:book_take";
+    }
+
+
+    @RequestMapping(value = "/give_out", method = RequestMethod.POST)
+    public String GiveOut(
+            @RequestParam(name="r_id") String str_r_id,
+            @RequestParam(name="b_ex_id") String str_b_ex_id,
+            @RequestParam(name="date_take", required = false) String str_date_take,
+            @RequestParam(name="date_sh_ret", required = false) String str_date_sh_ret,
+            @RequestParam(name="delta_day", required = false) String str_delta_day,
+            ModelMap map)
+    {
+        I_ReadersDAO r_dao = StdDAO_Factory.getInstance().getReaderDao();
+        int r_id = Integer.parseInt(str_r_id);
+        int b_ex_id = Integer.parseInt(str_b_ex_id);
+        if(str_delta_day!=null && str_delta_day.length() != 0){
+            int dd = Integer.parseInt(str_delta_day);
+            r_dao.BookTake(b_ex_id, r_id, dd);
+            return "redirect:success";
+        }
+
+        if(str_date_take!=null && str_date_take.length() != 0){
+            java.sql.Date data_take = java.sql.Date.valueOf(str_date_take);
+            java.sql.Date data_sh_ret = java.sql.Date.valueOf(str_date_sh_ret);
+            r_dao.BookTake(b_ex_id, r_id, data_take, data_sh_ret);
+            return "redirect:success";
+        }
+
+        java.sql.Date data_sh_ret_1 = java.sql.Date.valueOf(str_date_sh_ret);
+        r_dao.BookTake(b_ex_id, r_id, data_sh_ret_1);
+        return "redirect:success";
     }
 
     @GetMapping("/success") public String Success(ModelMap map) { return "success"; }

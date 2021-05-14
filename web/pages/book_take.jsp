@@ -22,14 +22,20 @@
             <c:if test="${!not_book}"><label>номер экземпляра книги: ${book_ex_id}</label></c:if>
             <c:if test="${!can_take && !not_book && !not_reader}"><label class="bad-info">у читателя уже есть экземпляр такой книги</label></c:if>
             <c:if test="${can_take && !not_book && !not_reader}">
-            <form action="give_out">
+            <form action="give_out" method="post">
                 <div>
                     <legend>дата выдачи: </legend>
-                    <input name="date_take" type="text" size="25">
+                    <input name="date_take" type="date">
                 </div>
                 <div>
                     <legend>планируемая дата возвращения: </legend>
-                    <input name="date_take" type="text" size="25">
+                    <input name="date_sh_ret" type="date">
+                </div>
+                <br>
+                <label>или</label>
+                <div>
+                    <legend>на сколько дней: </legend>
+                    <input name="delta_day" type="text" size="10">
                 </div>
                 <input name="r_id" type="hidden" value="${reader_id}">
                 <input name="b_ex_id" type="hidden" value="${book_ex_id}">
