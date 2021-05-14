@@ -9,12 +9,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 public class CtrlReaders {
@@ -182,6 +179,33 @@ public class CtrlReaders {
     @RequestMapping(value = "/found_reader", method = RequestMethod.GET)
     public String FoundReader(ModelMap map){ return "found_reader"; }
 
+
+    @RequestMapping(value = "/book_exs", method = RequestMethod.GET)
+    public String BookExs(@RequestParam(name="id") String book_id, ModelMap map)
+    {
+        I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
+        I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
+        int id = Integer.parseInt(book_id);
+        Books book = book_dao.GetBookById(id);
+        ArrayList<ArrayList<Object>> exs = new ArrayList<>();
+        List<BookExamples> real_exs = book_dao.GetBookEx(id);
+        real_exs.forEach(ex -> {
+            ArrayList<Object> temp = new ArrayList<>();
+            temp.add(ex.getBookExId());
+            AtomicInteger temp_str = new AtomicInteger(-1);
+            if(!ex.getDecommissioned() && ex.getSpare()){
+                ex_dao.GetExBookHistory(ex).forEach(not_ret -> {if(not_ret.getRealRetDate()==null){ temp_str.set(ex.getBookExId());}});
+            }
+            temp.add(ex.getDecommissioned() ? "снята с учета" : (ex.getSpare() ? "в наличии" : ("выдана: #" + temp_str.get())));
+            exs.add(temp);
+        });
+        map.addAttribute("exs", exs);
+        map.addAttribute("book_id", id);
+        map.addAttribute("title", book.getTitle());
+        map.addAttribute("can_take", (book_dao.GetBookEx(id, true, true).size()>0));
+        return "book_exs";
+    }
+
     @RequestMapping(value = "/book_ex", method = RequestMethod.GET)
     public String BookEx(@RequestParam(name="ex_id") String str_ex_id, ModelMap map)
     {
@@ -193,6 +217,7 @@ public class CtrlReaders {
         map.addAttribute("book_id", ex.getBook().getBookId());
         map.addAttribute("can_take", ex.getSpare());
         map.addAttribute("dereg", ex.getDecommissioned());
+
         return "book_ex";
     }
 

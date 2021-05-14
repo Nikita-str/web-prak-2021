@@ -205,3 +205,25 @@ button.lb-but:hover{
     left: 150vw;
     display: none;
 }
+
+.scrollable{display: block; overflow:hidden; overflow-y:scroll;}
+
+#table-layer-weird {
+    width: 436px; /* 140px * 3 column + 16px scrollbar width */
+    border-spacing: 0;
+}
+#tbody-layer-weird, #thead-layer-weird tr{ display: block; }
+
+#tbody-layer-weird {
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#tbody-layer-weird  td, #thead-layer-weird th {
+    width: 140px;
+}
+
+#thead-layer-weird  th:last-child {
+    width: 156px; /* 140px + 16px scrollbar width */
+}
