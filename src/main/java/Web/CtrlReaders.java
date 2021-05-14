@@ -134,6 +134,7 @@ public class CtrlReaders {
                             @RequestParam(name="snake", required = false) String snake,
                             @RequestParam(name="pat", required = false) String pat,
                             @RequestParam(name="phone", required = false) String phone,
+                             @RequestParam(name="from_take_ex_id", required = false) String str_from_take_ex_id,
                             ModelMap map)
     {
         I_ReadersDAO reader_dao = StdDAO_Factory.getInstance().getReaderDao();
@@ -141,6 +142,7 @@ public class CtrlReaders {
         if(snake != null && snake.length()==0)snake=null;
         if(pat != null && pat.length()==0)pat=null;
         if(phone != null && phone.length()==0)phone=null;
+        if(phone != null && str_from_take_ex_id.length()==0)str_from_take_ex_id=null;
 
         System.out.println(name);
 
@@ -154,6 +156,7 @@ public class CtrlReaders {
             rs = reader_dao.FindReader(name, snake, pat);
         }
         map.addAttribute("rs", rs);
+        if(str_from_take_ex_id != null) map.addAttribute("from_take_ex_id", Integer.parseInt(str_from_take_ex_id));
         return "found_reader";
     }
 
@@ -163,6 +166,7 @@ public class CtrlReaders {
                              @RequestParam(name="find_pub", required = false) String pub,
                              @RequestParam(name="find_year", required = false) String year,
                              @RequestParam(name="find_ISBN", required = false) String ISBN,
+                             @RequestParam(name="from_take_rid", required = false) String str_from_take_rid,
                              ModelMap map)
     {
         I_BooksDAO book_dao = StdDAO_Factory.getInstance().getBookDao();
@@ -173,6 +177,7 @@ public class CtrlReaders {
         if(ISBN != null && ISBN.length()==0)ISBN=null;
         List<Books> bs = book_dao.BookFind(title, pub==null?null:p_dao.GetPublisherId(pub),year==null?null:Integer.parseInt(year), ISBN, false);
         map.addAttribute("bs", bs);
+        if(str_from_take_rid != null) map.addAttribute("from_take_rid", Integer.parseInt(str_from_take_rid));
         return "found_book";
     }
 
@@ -250,18 +255,32 @@ public class CtrlReaders {
             @RequestParam(name="r_id", required = false) String str_r_id,
             ModelMap map)
     {
+        boolean can_take = true;
         if(str_ex_id != null) {
+            I_BookExDAO ex_dao = StdDAO_Factory.getInstance().getBookExDao();
             int ex_id = Integer.parseInt(str_ex_id);
+            BookExamples ex = ex_dao.GetBookExById(ex_id);
+            map.addAttribute("book_ex_id", ex_id);
+            map.addAttribute("title", ex.getBook().getTitle());
             map.addAttribute("not_book", false);
+            if(str_r_id != null){
+                if(ex_dao.ReaderHasBookEx(ex_id, Integer.parseInt(str_r_id)))can_take=false;
+            }
         } else {
             map.addAttribute("not_book", true);
+            can_take = false;
         }
         if(str_r_id != null) {
+            I_ReadersDAO r_dao = StdDAO_Factory.getInstance().getReaderDao();
             int r_id = Integer.parseInt(str_r_id);
+            map.addAttribute("reader_id", r_id);
             map.addAttribute("not_reader", false);
+
         } else {
             map.addAttribute("not_reader", true);
+            can_take = false;
         }
+        map.addAttribute("can_take", can_take);
         return "book_take";
     }
 

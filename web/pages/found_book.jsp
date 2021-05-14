@@ -5,7 +5,12 @@
 <body>
 <div class="left-block">
     <div class="lb-but" id="page-name">поиск</div>
-    <a href="readers"><button class="lb-but back">к книгам</button></a>
+    <c:choose>
+        <c:when test="${from_take_rid>-1}">
+            <a href="book_take?r_id=${from_take_rid}"><button class="lb-but back">к выбору книги</button></a>
+        </c:when>
+        <c:otherwise><a href="books"><button class="lb-but back">к книгам</button></a></c:otherwise>
+    </c:choose>
     <a href="index"><button class="lb-but to-index">на главную</button></a>
 </div>
 <div class="right-block">

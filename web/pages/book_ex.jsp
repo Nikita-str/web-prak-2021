@@ -6,7 +6,7 @@
 <jsp:include page="div/Await.jsp"/>
 <div class="left-block">
     <div class="lb-but" id="page-name">экземпляр</div>
-    <c:if test="${!dereg && can_take}"><button class="lb-but">взять книгу</button></c:if>
+    <c:if test="${!dereg && can_take}"><a href="book_take?ex_id=${ex_id}"><button class="lb-but">взять книгу</button></a></c:if>
     <c:if test="${!dereg && !can_take}"><a href="book_ret?ex_id=${ex_id}"><button class="lb-but">сдать книгу</button></a></c:if>
     <c:if test="${!dereg && !can_take}"><a href="book_lost?ex_id=${ex_id}"><button class="lb-but bad-info">утерена</button></a></c:if>
     <a href="history?ex_id=${ex_id}"><button class="lb-but">история</button></a>
