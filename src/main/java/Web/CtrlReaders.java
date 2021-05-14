@@ -244,6 +244,29 @@ public class CtrlReaders {
         return "redirect:book";
     }
 
+    @RequestMapping(value = "/book_take", method = RequestMethod.GET)
+    public String BookTake(
+            @RequestParam(name="ex_id", required = false) String str_ex_id,
+            @RequestParam(name="r_id", required = false) String str_r_id,
+            ModelMap map)
+    {
+        if(str_ex_id != null) {
+            int ex_id = Integer.parseInt(str_ex_id);
+            map.addAttribute("not_book", false);
+        } else {
+            map.addAttribute("not_book", true);
+        }
+        if(str_r_id != null) {
+            int r_id = Integer.parseInt(str_r_id);
+            map.addAttribute("not_reader", false);
+        } else {
+            map.addAttribute("not_reader", true);
+        }
+        return "book_take";
+    }
+
+    @GetMapping("/success") public String Success(ModelMap map) { return "success"; }
+
     @GetMapping("/showMsgX2")
     public String passParametersWithModelMap(@RequestParam(name="msg") String msg, ModelMap map) {
         map.addAttribute("message", msg + " " + msg);

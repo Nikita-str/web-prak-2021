@@ -16,32 +16,20 @@
             <label>название: ${title}</label>
             <br/>
             <label>экземпляры:</label>
-            <table class="table" id="table-layer-weird">
-                <thead id="thead-layer-weird">
-                <tr>
-                    <th scope="col"> ID</th>
-                    <th scope="col"> Состояние</th>
-                    <th scope="col"> Перейти</th>
-                </tr>
-                </thead>
-                <tbody id="tbody-layer-weird">
+            <nav id="nav-layer-distortion" class="scrollable">
                 <c:choose>
                     <c:when test="${exs.size()==0}">
-                        <tr><td class="bad-info" colspan="4"> экземпляров книги нет</td></tr>
+                        <ul><li class="bad-info" colspan="4"> экземпляров книги нет</li></ul>
                     </c:when>
                     <c:otherwise>
+                        <ul>
                         <c:forEach items="${exs}" var="ex">
-                            <li>
-                                <td>${ex.size()}</td>
-                                <td>${ex[1]}</td>
-                                <td><a href="book_ex?ex_id=${ex[0]}">OK</a></td>
-                            </li>
+                                <li>${ex[0]}  |  ${ex[1]}  |  <a href="book_ex?ex_id=${ex[0]}">OK</a></li>
                         </c:forEach>
+                        </ul>
                     </c:otherwise>
                 </c:choose>
-
-                </tbody>
-            </table>
+            </nav>
         </div>
     </div>
 </div>

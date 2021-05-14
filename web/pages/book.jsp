@@ -6,7 +6,7 @@
     <jsp:include page="div/Await.jsp"/>
     <div class="left-block">
         <div class="lb-but" id="page-name">книга</div>
-        <button class="lb-but">к экземплярам</button>
+        <a href="book_exs?id=${book.getBookId()}"><button class="lb-but">к экземплярам</button></a>
         <c:if test="${can_take}"><button class="lb-but">взять книгу</button></c:if>
         <a href="books"><button class="lb-but back">к книгам</button></a>
         <a href="index"><button class="lb-but to-index">на главную</button></a>
