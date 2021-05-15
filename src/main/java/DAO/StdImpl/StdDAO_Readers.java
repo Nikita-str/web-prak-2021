@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class StdDAO_Readers extends StdImpl_ReaderDAO implements I_ReadersDAO {
     @Override
@@ -72,6 +73,10 @@ public class StdDAO_Readers extends StdImpl_ReaderDAO implements I_ReadersDAO {
 
     @Override public List<Readers> FindReader(String first_name, String second_name, String patr) {
         //if(patr == null)return FindReader(first_name, second_name);
+        if(first_name != null) first_name = first_name.toLowerCase(Locale.ROOT);
+        if(second_name != null) second_name = second_name.toLowerCase(Locale.ROOT);
+        if(patr != null) patr = patr.toLowerCase(Locale.ROOT);
+
         boolean all_null = (second_name == null || second_name.length() == 0) &&
                             (first_name == null || first_name.length() == 0) &&
                             (patr == null || patr.length() == 0);

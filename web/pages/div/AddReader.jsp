@@ -26,5 +26,5 @@
         </div>
 
         <div class="cancel bot-but" onclick="ShowById('add-reader-box')"><div class="center-it">отмена</div></div>
-        <button type="submit" class="ok bot-but" onclick="ShowById('await')"><div class="center-it">подтвердить</div></button>
+        <button name="b_r_add" type="submit" class="ok bot-but" onclick="ShowById('await')"><div class="center-it">подтвердить</div></button>
     </form>

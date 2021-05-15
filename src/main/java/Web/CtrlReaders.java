@@ -136,14 +136,23 @@ public class CtrlReaders {
     }
 
     @RequestMapping(value = "/find_reader", method = RequestMethod.GET)
-    public String FindReader(@RequestParam(name="find_name", required = false) String name,
-                            @RequestParam(name="snake", required = false) String snake,
-                            @RequestParam(name="pat", required = false) String pat,
-                            @RequestParam(name="phone", required = false) String phone,
-                             @RequestParam(name="from_take_ex_id", required = false) String str_from_take_ex_id,
-                            ModelMap map)
+    public String FindReader(
+            @RequestParam(name="find_by_id", required = false) String find_by_id,
+            @RequestParam(name="find_name", required = false) String name,
+            @RequestParam(name="snake", required = false) String snake,
+            @RequestParam(name="pat", required = false) String pat,
+            @RequestParam(name="phone", required = false) String phone,
+            @RequestParam(name="from_take_ex_id", required = false) String str_from_take_ex_id,
+            ModelMap map)
     {
         I_ReadersDAO reader_dao = StdDAO_Factory.getInstance().getReaderDao();
+        if(find_by_id != null && find_by_id.length()!=0){
+            List<Readers> rs0 = new ArrayList<>();
+            rs0.add(reader_dao.GetReadersById(Integer.parseInt(find_by_id)));
+            map.addAttribute("rs", rs0);
+            if(str_from_take_ex_id != null) map.addAttribute("from_take_ex_id", Integer.parseInt(str_from_take_ex_id));
+            return "found_reader";
+        }
         if(name != null && name.length()==0)name=null;
         if(snake != null && snake.length()==0)snake=null;
         if(pat != null && pat.length()==0)pat=null;

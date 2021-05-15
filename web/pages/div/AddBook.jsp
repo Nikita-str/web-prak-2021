@@ -30,5 +30,5 @@
         </div>
 
         <div class="cancel bot-but" onclick="ShowById('add-book-box')"><div class="center-it">отмена</div></div>
-        <button type="submit" class="ok bot-but" onclick="ShowById('await')"><div class="center-it">подтвердить</div></button>
+        <button name="b_b_add" type="submit" class="ok bot-but" onclick="ShowById('await')"><div class="center-it">подтвердить</div></button>
     </form>

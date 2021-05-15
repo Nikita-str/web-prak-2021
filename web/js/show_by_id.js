@@ -8,11 +8,11 @@ function ShowById(elem_id, display_on = "block", display_off = "none", hide_clas
     let elem = document.getElementById(elem_id);
     if(!elem)return;
     let elem_display = elem.style.display;
-    hide_by_class_name(hide_class);
+    hide_by_class_name(hide_class, display_off);
     elem.style.display = (elem_display === display_off) ? display_on : display_off;
 }
 
-function ShById(elem_id, hide_class = "") {ShowById(elem_id, "block", "none", hide_class);}
+function ShById(elem_id, hide_cl = "") {ShowById(elem_id, "block", "none", hide_cl);}
 
 /**
  * @param {String} hide_class all elem.display with this class will seted to display_off

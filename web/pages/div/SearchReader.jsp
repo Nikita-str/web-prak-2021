@@ -4,6 +4,10 @@
     <form id="search-reader-box" class="hide-layer-weird" method="get" action="find_reader" style="display: none;">
         <div class="inp-handler">
             <div>
+                <label>id билета </label>
+                <input name="find_by_id" type="text" size="5">
+            </div>
+            <div>
                 <label>имя </label>
                 <input name="find_name" type="text" size="25">
             </div>
